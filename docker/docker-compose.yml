@@ -6,11 +6,44 @@ networks:
 
 services:
 
+  redis-server:
+    container_name: redis
+    dns_search: cnaf.infn.it
+    hostname: redis.cnaf.infn.it 
+    image: redis:latest
+    depends_on:
+      - docker-storm
+    networks:
+      default:
+        aliases:
+          - redis.cnaf.infn.it
+
+  cdmi-storm:
+    container_name: cdmi-storm
+    dns_search: cnaf.infn.it
+    hostname: cdmi-storm.cnaf.infn.it
+    image: italiangrid/cdmi-storm
+    depends_on:
+      - redis-server
+      - docker-storm
+    environment:
+      - MODE
+      - CDMI_CLIENT_SECRET
+    env_file:
+    - cdmi-storm.env
+    networks:
+      default:
+        aliases:
+          - cdmi-storm.cnaf.infn.it
+
   docker-storm-testsuite:
     container_name: docker-storm-testsuite
     dns_search: cnaf.infn.it
     hostname: docker-storm-testsuite.cnaf.infn.it
     image: italiangrid/storm-testsuite:latest
+    environment:
+      - CDMI_CLIENT_SECRET
+      - IAM_USER_PASSWORD
     env_file:
     - storm-testsuite.env
     depends_on:
