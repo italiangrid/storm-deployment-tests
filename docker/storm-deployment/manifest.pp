@@ -1,3 +1,4 @@
+include mwdevel_test_vos
 include mwdevel_test_ca
 include mwdevel_infn_ca
 include mwdevel_centos_utils::fix_stap_groups
