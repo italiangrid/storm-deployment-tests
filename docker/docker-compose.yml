@@ -69,7 +69,7 @@ services:
     environment:
       - MODE
     env_file:
-    - storm-deployment.env
+      - storm-deployment.env
     ports:
       - 8080:8080
       - 8085:8085

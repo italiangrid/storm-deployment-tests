@@ -1,0 +1,139 @@
+version: '3'
+
+networks:
+  cnaf.infn.it:
+
+volumes:
+  storage:
+    driver: local
+
+  gridmapdir:
+    driver: local
+
+  trust_anchors:
+    driver: local
+
+  config:
+    driver: local
+
+services:
+
+  trust:
+    image: indigoiam/trustanchors
+    environment:
+      SKIP_UPDATE_TRUST_ANCHORS: "true"
+    volumes:
+      - trust_anchors:/etc/grid-security/certificates
+
+  redis-server:
+    container_name: redis
+    dns_search: cnaf.infn.it
+    hostname: redis.cnaf.infn.it 
+    image: redis:latest
+    depends_on:
+      - docker-storm
+    networks:
+      cnaf.infn.it:
+        aliases:
+          - redis.cnaf.infn.it
+
+  cdmi-storm:
+    image: italiangrid/cdmi-storm
+    build:
+      context: ../docker/cdmi-storm
+    container_name: cdmi-storm
+    dns_search: cnaf.infn.it
+    hostname: cdmi-storm.cnaf.infn.it
+    depends_on:
+      - redis-server
+      - docker-storm
+    environment:
+      - MODE
+      - CDMI_CLIENT_SECRET
+    env_file:
+    - cdmi-storm.env
+    networks:
+      cnaf.infn.it:
+        aliases:
+          - cdmi-storm.cnaf.infn.it
+
+  docker-storm-testsuite:
+    image: italiangrid/storm-testsuite
+    build:
+      context: ../docker/storm-testsuite
+    container_name: docker-storm-testsuite
+    dns_search: cnaf.infn.it
+    hostname: docker-storm-testsuite.cnaf.infn.it
+    environment:
+      - CDMI_CLIENT_SECRET
+      - IAM_USER_PASSWORD
+    env_file:
+    - storm-testsuite.env
+    entrypoint: sleep infinity
+    depends_on:
+      - docker-storm
+    networks:
+      cnaf.infn.it:
+        aliases:
+          - docker-storm-testsuite.cnaf.infn.it
+
+  docker-storm:
+    image: italiangrid/storm-deployment:centos6
+    build:
+      context: ../docker/storm-deployment
+      dockerfile: Dockerfile.centos6
+    container_name: docker-storm
+    dns_search: cnaf.infn.it
+    hostname: docker-storm.cnaf.infn.it
+    entrypoint: /bin/bash deploy.sh
+    environment:
+      - MODE
+    env_file:
+      - storm-deployment.env
+    ports:
+      - 9044:1044
+    volumes:
+      - gridmapdir:/etc/grid-security
+      - storage:/storage
+
+    networks:
+      cnaf.infn.it:
+        aliases:
+          - docker-storm.cnaf.infn.it
+
+  fe-devel:
+    image: italiangrid/storm-fe-development:latest 
+    build:
+      context: ./storm-fe-devel
+    container_name: fe
+    dns_search: cnaf.infn.it
+    hostname: fe.cnaf.infn.it
+    depends_on:
+      - trust
+      - docker-storm
+    volumes:
+      - gridmapdir:/gridmapdir
+      - $HOME/git/storm-frontend:/code
+      - $HOME/.gitconfig:/home/storm/.gitconfig
+    privileged: true
+    environment:
+      - STORM_FE_BUILD
+    networks:
+      cnaf.infn.it:
+        aliases:
+          - fe.cnaf.infn.it
+
+  fe-client:
+    image: italiangrid/storm-fe-development:latest 
+    container_name: client
+    dns_search: cnaf.infn.it
+    command: sleep infinity
+    depends_on:
+      - trust
+      - docker-storm
+    networks:
+      cnaf.infn.it:
+        aliases:
+          - client.cnaf.infn.it
+    volumes:
+      - gridmapdir:/etc/grid-security
