@@ -4,6 +4,7 @@ set -x
 # Optional parameters
 TESTSUITE="${TESTSUITE:-git://github.com/italiangrid/storm-testsuite.git}"
 TESTSUITE_BRANCH="${TESTSUITE_BRANCH:-develop}"
+VOMS_FAKE="${VOMS_FAKE:-true}"
 
 STORM_BE_SYNC_PORT="${STORM_BE_SYNC_PORT:-8444}"
 STORM_BE_HOST="${STORM_BE_HOST:-docker-storm.cnaf.infn.it}"
@@ -34,6 +35,7 @@ VARIABLES="$VARIABLES --variable cdmiAdminUser:$CDMI_ADMIN_USERNAME"
 VARIABLES="$VARIABLES --variable cdmiAdminPassword:$CDMI_ADMIN_PASSWORD"
 VARIABLES="$VARIABLES --variable cdmiClientSecret:$CDMI_CLIENT_SECRET"
 VARIABLES="$VARIABLES --variable iamUserPassword:$IAM_USER_PASSWORD"
+VARIABLES="$VARIABLES --variable vomsFake:$VOMS_FAKE"
 
 # Build exclude clause
 if [ -z "$TESTSUITE_EXCLUDE" ]; then

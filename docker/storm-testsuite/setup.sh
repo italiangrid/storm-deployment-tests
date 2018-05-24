@@ -29,6 +29,8 @@ fi
 pip install --upgrade robotframework-httplibrary
 
 # install clients
-yum install -y voms-clients3 myproxy
+yum install -y myproxy
+
+yum localinstall -y https://ci.cloud.cnaf.infn.it/view/voms/job/pkg.voms/job/release_dec_17/lastSuccessfulBuild/artifact/repo/centos6/voms-clients3-3.3.1-0.el6.centos.noarch.rpm
 
 echo 'export X509_USER_PROXY="/tmp/x509up_u$(id -u)"'>/etc/profile.d/x509_user_proxy.sh
