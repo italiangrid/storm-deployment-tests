@@ -13,6 +13,8 @@ CDMI_ENDPOINT="${CDMI_ENDPOINT:-cdmi-storm.cnaf.infn.it:8888}"
 CDMI_CLIENT_ID="${CDMI_CLIENT_ID:-838129a5-84ca-4dc4-bfd8-421ee317aabd}"
 IAM_USER_NAME="${IAM_USER_NAME:-storm_robot_user}"
 
+STORM_STORAGE_ROOT_DIR="${STORM_STORAGE_ROOT_DIR:-/storage}"
+
 CDMI_ADMIN_USERNAME=${CDMI_ADMIN_USERNAME:-restadmin}
 CDMI_ADMIN_PASSWORD=${CDMI_ADMIN_PASSWORD:-restadmin}
 
@@ -36,6 +38,7 @@ VARIABLES="$VARIABLES --variable cdmiAdminPassword:$CDMI_ADMIN_PASSWORD"
 VARIABLES="$VARIABLES --variable cdmiClientSecret:$CDMI_CLIENT_SECRET"
 VARIABLES="$VARIABLES --variable iamUserPassword:$IAM_USER_PASSWORD"
 VARIABLES="$VARIABLES --variable vomsFake:$VOMS_FAKE"
+VARIABLES="$VARIABLES --variable storageAreaRoot:$STORM_STORAGE_ROOT_DIR"
 
 # Build exclude clause
 if [ -z "$TESTSUITE_EXCLUDE" ]; then
