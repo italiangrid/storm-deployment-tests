@@ -10,12 +10,13 @@ fix_yaim () {
   echo "}">> /opt/glite/yaim/functions/local/config_ntp
 }
 
-trap "exit 1" TERM
 set -ex
+trap "exit 1" TERM
 
-source ./../properties
+if [ -z ${UMD_RELEASE_RPM+x} ]; then echo "UMD_RELEASE_RPM is unset"; exit 1; fi
+if [ -z ${STORM_REPO+x} ]; then echo "STORM_REPO is unset"; exit 1; fi
 
-COMMON_PATH="../common"
+COMMON_PATH="./common"
 
 # install UMD repositories
 sh ${COMMON_PATH}/install-umd-repos.sh ${UMD_RELEASE_RPM}
