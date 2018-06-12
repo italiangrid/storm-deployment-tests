@@ -10,8 +10,11 @@ COMMON_PATH="./common"
 # install UMD repositories
 sh ${COMMON_PATH}/install-umd-repos.sh ${UMD_RELEASE_RPM}
 
-# install StoRM repository
-sh ${COMMON_PATH}/install-storm-repo.sh ${STORM_REPO}
+# install StoRM stable repository
+sh ${COMMON_PATH}/install-storm-repo.sh ${STORM_STABLE_REPO} storm-stable
+
+# install StoRM test repository
+sh ${COMMON_PATH}/install-storm-repo.sh ${STORM_REPO} storm-test
 
 # use local repo
 if [ "${USE_LOCAL_REPO}" = true ]; then

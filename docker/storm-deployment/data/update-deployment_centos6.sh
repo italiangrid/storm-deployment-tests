@@ -21,6 +21,9 @@ COMMON_PATH="./common"
 # install UMD repositories
 sh ${COMMON_PATH}/install-umd-repos.sh ${UMD_RELEASE_RPM}
 
+# install StoRM stable repository
+sh ${COMMON_PATH}/install-storm-repo.sh ${STORM_STABLE_REPO} storm-stable
+
 # add some users
 adduser -r storm
 
@@ -42,8 +45,8 @@ sed -i 's/sleep 2/sleep 5/' /etc/init.d/bdii
 # do yaim
 /opt/glite/yaim/bin/yaim -c -s /etc/storm/siteinfo/storm.def -n se_storm_backend -n se_storm_frontend -n se_storm_gridftp -n se_storm_webdav
 
-# install StoRM repository
-sh ${COMMON_PATH}/install-storm-repo.sh ${STORM_REPO}
+# install StoRM test repository
+sh ${COMMON_PATH}/install-storm-repo.sh ${STORM_REPO} storm-test
 
 # update
 yum clean all
