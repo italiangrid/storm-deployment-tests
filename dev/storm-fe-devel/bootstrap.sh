@@ -2,6 +2,7 @@
 set -ex
 
 sudo mkdir -p /etc/grid-security/grimapdir
+sudo mkdir -p /etc/grid-security/storm
 sudo cp -r /gridmapdir/* /etc/grid-security/
 sudo cp /certs/hostcert.pem /etc/grid-security/storm/
 sudo cp /certs/hostkey.pem /etc/grid-security/storm/
