@@ -15,6 +15,7 @@ trap "exit 1" TERM
 
 if [ -z ${UMD_RELEASE_RPM+x} ]; then echo "UMD_RELEASE_RPM is unset"; exit 1; fi
 if [ -z ${STORM_REPO+x} ]; then echo "STORM_REPO is unset"; exit 1; fi
+if [ -z ${STORM_STABLE_REPO+x} ]; then echo "STORM_STABLE_REPO is unset"; exit 1; fi
 
 COMMON_PATH="./common"
 
