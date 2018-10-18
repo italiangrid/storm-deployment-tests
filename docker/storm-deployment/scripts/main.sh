@@ -15,15 +15,21 @@ trap "exit 1" TERM
 
 if [ -z ${UMD_RELEASE_RPM+x} ]; then echo "UMD_RELEASE_RPM is unset"; exit 1; fi
 if [ -z ${STORM_REPO+x} ]; then echo "STORM_REPO is unset"; exit 1; fi
-if [ -z ${STORM_STABLE_REPO+x} ]; then echo "STORM_STABLE_REPO is unset"; exit 1; fi
-
-COMMON_PATH="./common"
 
 # install UMD repositories
-sh ${COMMON_PATH}/install-umd-repos.sh ${UMD_RELEASE_RPM}
+sh "./install-umd-repos.sh" ${UMD_RELEASE_RPM}
 
-# install StoRM stable repository
-sh ${COMMON_PATH}/install-storm-repo.sh ${STORM_STABLE_REPO} storm-stable
+# install a list of repositories
+if [ -z ${INSTALLED_REPOS+x} ]; then
+  echo "nothing to install";
+else
+  for repo in $(echo $INSTALLED_REPOS | sed "s/,/ /g")
+  do
+    repo_name=$(echo ${repo} | awk -F/ '{printf $NF}')
+    echo "Install repo '${repo}' in '${repo_name}' ..."
+    sh "./install-repo.sh" ${repo} ${repo_name}
+  done
+fi
 
 # add some users
 adduser -r storm
@@ -35,10 +41,10 @@ yum install -y emi-storm-backend-mp emi-storm-frontend-mp emi-storm-globus-gridf
 fix_yaim
 
 # install yaim configuration
-sh ${COMMON_PATH}/install-yaim-configuration.sh "clean"
+sh "./install-yaim-configuration.sh" "clean"
 
 # Sleep more avoid issues on docker
-sed -i 's/sleep 20/sleep 30/' /etc/init.d/storm-backend-server
+#sed -i 's/sleep 20/sleep 30/' /etc/init.d/storm-backend-server
 
 # Sleep more in bdii init script to avoid issues on docker
 sed -i 's/sleep 2/sleep 5/' /etc/init.d/bdii
@@ -47,7 +53,7 @@ sed -i 's/sleep 2/sleep 5/' /etc/init.d/bdii
 /opt/glite/yaim/bin/yaim -c -s /etc/storm/siteinfo/storm.def -n se_storm_backend -n se_storm_frontend -n se_storm_gridftp -n se_storm_webdav
 
 # install StoRM test repository
-sh ${COMMON_PATH}/install-storm-repo.sh ${STORM_REPO} storm-test
+sh "./install-repo.sh" ${STORM_REPO} storm-test
 
 # update
 yum clean all
@@ -58,21 +64,21 @@ if [ $? != 0 ]; then
     exit 1
 fi
 
-sh ${COMMON_PATH}/post-update.sh
+sh "./post-update.sh"
 
 fix_yaim
 
 # Sleep more avoid issues on docker
-sed -i 's/sleep 20/sleep 30/' /etc/init.d/storm-backend-server
+#sed -i 's/sleep 20/sleep 30/' /etc/init.d/storm-backend-server
 
 # Sleep more in bdii init script to avoid issues on docker
-sed -i 's/sleep 2/sleep 5/' /etc/init.d/bdii
+#sed -i 's/sleep 2/sleep 5/' /etc/init.d/bdii
 
 # re-install yaim configuration
-sh ${COMMON_PATH}/install-yaim-configuration.sh "update"
+sh "./install-yaim-configuration.sh" "update"
 
 # run post-installation config script
-sh ${COMMON_PATH}/post-config-setup.sh "update"
+sh "./post-config-setup.sh" "update"
 
 # do yaim
 /opt/glite/yaim/bin/yaim -c -s /etc/storm/siteinfo/storm.def -n se_storm_backend -n se_storm_frontend -n se_storm_gridftp -n se_storm_webdav
