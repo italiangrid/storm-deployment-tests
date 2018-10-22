@@ -32,6 +32,6 @@ setfattr -n user.TSMRecT -v "5b44eee4-de80-4d9c-b4ac-d4a205b4a9d4" $TAPESA_ROOT/
 HOSTNAME=`hostname -f`
 
 popd
-source ./siteinfo/${VERSION}/storm.def
+source ./${VERSION}/siteinfo/storm.def
 
 mysql -u root -p${MYSQL_PASSWORD} -e"GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY '${MYSQL_PASSWORD}' WITH GRANT OPTION; FLUSH PRIVILEGES" > /dev/null 2> /dev/null

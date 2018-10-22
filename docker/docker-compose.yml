@@ -2,32 +2,32 @@ version: '2.1'
 
 networks:
   default:
-    name: cnaf.infn.it
+    name: example
 
 services:
 
   redis-server:
     container_name: redis
-    dns_search: cnaf.infn.it
-    hostname: redis.cnaf.infn.it 
+    dns_search: example
+    hostname: redis-server.example
     image: redis:latest
     depends_on:
-      - docker-storm
+      - storm
     networks:
       default:
         aliases:
-          - redis.cnaf.infn.it
+          - redis-server.example
 
   cdmi-storm:
     image: italiangrid/cdmi-storm
     build:
       context: ./cdmi-storm
-    container_name: cdmi-storm
-    dns_search: cnaf.infn.it
-    hostname: cdmi-storm.cnaf.infn.it
+    container_name: cdmi
+    dns_search: example
+    hostname: cdmi-storm.example
     depends_on:
       - redis-server
-      - docker-storm
+      - storm
     environment:
       - MODE
       - CDMI_CLIENT_SECRET
@@ -36,35 +36,35 @@ services:
     networks:
       default:
         aliases:
-          - cdmi-storm.cnaf.infn.it
+          - cdmi-storm.example
 
-  docker-storm-testsuite:
+  storm-testsuite:
     image: italiangrid/storm-testsuite
     build:
       context: ./storm-testsuite
-    container_name: docker-storm-testsuite
-    dns_search: cnaf.infn.it
-    hostname: docker-storm-testsuite.cnaf.infn.it
+    container_name: testsuite
+    dns_search: example
+    hostname: storm-testsuite.example
     environment:
       - CDMI_CLIENT_SECRET
       - IAM_USER_PASSWORD
     env_file:
     - storm-testsuite.env
     depends_on:
-      - docker-storm
+      - storm
     networks:
       default:
         aliases:
-          - docker-storm-testsuite.cnaf.infn.it
+          - storm-testsuite.example
 
-  docker-storm:
+  storm:
     image: italiangrid/storm-deployment:centos6
     build:
       context: ./storm-deployment
       dockerfile: Dockerfile.centos6
-    container_name: docker-storm
-    dns_search: cnaf.infn.it
-    hostname: docker-storm.cnaf.infn.it
+    container_name: storm
+    dns_search: example
+    hostname: storm.example
     entrypoint: /bin/bash deploy.sh
     environment:
       - MODE
@@ -79,4 +79,4 @@ services:
     networks:
       default:
         aliases:
-          - docker-storm.cnaf.infn.it
+          - storm.example

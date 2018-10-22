@@ -30,8 +30,8 @@ if [ $? != 0 ]; then
 fi
 
 # install host certificate
-cp /storm-certificates/docker_storm_cnaf_infn_it.cert.pem /etc/grid-security/hostcert.pem
-cp /storm-certificates/docker_storm_cnaf_infn_it.key.pem /etc/grid-security/hostkey.pem
+cp /storm-certificates/storm-example-cert.pem /etc/grid-security/hostcert.pem
+cp /storm-certificates/storm-example-key.pem /etc/grid-security/hostkey.pem
 chmod 400 /etc/grid-security/hostkey.pem
 chmod 644 /etc/grid-security/hostcert.pem
 service rsyslog start
