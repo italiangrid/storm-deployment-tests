@@ -55,7 +55,7 @@ function cleanup(){
 
 trap cleanup EXIT SIGINT SIGTERM SIGABRT
 
-export MODE=${MODE}
+export UPDATE_FROM=${UPDATE_FROM}
 cd docker
 docker network example
 docker-compose up --build --abort-on-container-exit
