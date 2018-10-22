@@ -23,14 +23,16 @@ pipeline {
             container('docker-runner') {
               cleanWs notFailBuild: true
               checkout scm
-              pushd docker
-              sh 'docker create network example'
-              sh 'docker compose up --build --abort-on-container-exit'
-              popd
-              sh 'mkdir reports'
-              sh 'docker-compose logs --no-color storm >reports/storm.log'
-              sh 'docker-compose logs --no-color testsuite >reports/storm-testsuite.log'
-              sh 'docker cp testsuite:/home/tester/storm-testsuite/reports reports'
+              sh """
+mkdir reports
+cd docker
+docker create network example
+docker-compose up --build --abort-on-container-exit
+cd ..
+docker-compose logs --no-color storm >reports/storm.log
+docker-compose logs --no-color testsuite >reports/storm-testsuite.log
+docker cp testsuite:/home/tester/storm-testsuite/reports reports
+"""
               archiveArtifacts 'reports/**'
             }
           }
@@ -43,14 +45,16 @@ pipeline {
             container('docker-runner') {
               cleanWs notFailBuild: true
               checkout scm
-              pushd docker
-              sh 'docker create network example'
-              sh 'docker compose up --build --abort-on-container-exit'
-              popd
-              sh 'mkdir reports'
-              sh 'docker-compose logs --no-color storm >reports/storm.log'
-              sh 'docker-compose logs --no-color testsuite >reports/storm-testsuite.log'
-              sh 'docker cp testsuite:/home/tester/storm-testsuite/reports reports'
+              sh """
+mkdir reports
+cd docker
+docker create network example
+docker-compose up --build --abort-on-container-exit
+cd ..
+docker-compose logs --no-color storm >reports/storm.log
+docker-compose logs --no-color testsuite >reports/storm-testsuite.log
+docker cp testsuite:/home/tester/storm-testsuite/reports reports
+"""
               archiveArtifacts 'reports/**'
             }
           }
@@ -63,14 +67,16 @@ pipeline {
             container('docker-runner') {
               cleanWs notFailBuild: true
               checkout scm
-              pushd docker
-              sh 'docker create network example'
-              sh 'docker compose up --build --abort-on-container-exit'
-              popd
-              sh 'mkdir reports'
-              sh 'docker-compose logs --no-color storm >reports/storm.log'
-              sh 'docker-compose logs --no-color testsuite >reports/storm-testsuite.log'
-              sh 'docker cp testsuite:/home/tester/storm-testsuite/reports reports'
+              sh """
+mkdir reports
+cd docker
+docker create network example
+docker-compose up --build --abort-on-container-exit
+cd ..
+docker-compose logs --no-color storm >reports/storm.log
+docker-compose logs --no-color testsuite >reports/storm-testsuite.log
+docker cp testsuite:/home/tester/storm-testsuite/reports reports
+"""
               archiveArtifacts 'reports/**'
             }
           }
