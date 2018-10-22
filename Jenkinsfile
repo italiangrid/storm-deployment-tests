@@ -17,7 +17,7 @@ pipeline {
       parallel {
         stage('update-from-umd') {
           environment {
-            UPDATE_FROM=umd
+            UPDATE_FROM="umd"
           }
           steps {
             container('docker-runner') {
@@ -37,7 +37,7 @@ pipeline {
         }
         stage('update-from-stable') {
           environment {
-            UPDATE_FROM=stable
+            UPDATE_FROM="stable"
           }
           steps {
             container('docker-runner') {
