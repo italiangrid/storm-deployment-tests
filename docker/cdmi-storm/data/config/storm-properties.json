@@ -1,6 +1,6 @@
 {
     "backend": {
-        "hostname": "docker-storm.cnaf.infn.it",
+        "hostname": "storm.example",
         "port": 9998,
         "token": "NS4kYAZuR65XJCq"
     },
