@@ -14,61 +14,65 @@ pipeline {
 
   stages {
     stage('run') {
-      parallel 'update-from-umd': {
-        environment {
-	  UPDATE_FROM=umd
-        }
-        steps {
-          container('docker-runner') {
-            cleanWs notFailBuild: true
-            checkout scm
-            pushd docker
-            sh 'docker create network example'
-            sh 'docker compose up --build --abort-on-container-exit'
-            popd
-            sh 'mkdir reports'
-            sh 'docker-compose logs --no-color storm >reports/storm.log'
-            sh 'docker-compose logs --no-color testsuite >reports/storm-testsuite.log'
-            sh 'docker cp testsuite:/home/tester/storm-testsuite/reports reports'
-            archiveArtifacts 'reports/**'
+      parallel {
+        stage('update-from-umd') {
+          environment {
+            UPDATE_FROM=umd
+          }
+          steps {
+            container('docker-runner') {
+              cleanWs notFailBuild: true
+              checkout scm
+              pushd docker
+              sh 'docker create network example'
+              sh 'docker compose up --build --abort-on-container-exit'
+              popd
+              sh 'mkdir reports'
+              sh 'docker-compose logs --no-color storm >reports/storm.log'
+              sh 'docker-compose logs --no-color testsuite >reports/storm-testsuite.log'
+              sh 'docker cp testsuite:/home/tester/storm-testsuite/reports reports'
+              archiveArtifacts 'reports/**'
+            }
           }
         }
-      }, 'update-from-stable': {
-        environment {
-          UPDATE_FROM=stable
-        }       
-        steps { 
-          container('docker-runner') {
-            cleanWs notFailBuild: true
-            checkout scm
-            pushd docker
-            sh 'docker create network example'
-            sh 'docker compose up --build --abort-on-container-exit'
-            popd
-            sh 'mkdir reports' 
-            sh 'docker-compose logs --no-color storm >reports/storm.log'
-            sh 'docker-compose logs --no-color testsuite >reports/storm-testsuite.log'
-            sh 'docker cp testsuite:/home/tester/storm-testsuite/reports reports'
-            archiveArtifacts 'reports/**'
+        stage('update-from-stable') {
+          environment {
+            UPDATE_FROM=stable
+          }
+          steps {
+            container('docker-runner') {
+              cleanWs notFailBuild: true
+              checkout scm
+              pushd docker
+              sh 'docker create network example'
+              sh 'docker compose up --build --abort-on-container-exit'
+              popd
+              sh 'mkdir reports'
+              sh 'docker-compose logs --no-color storm >reports/storm.log'
+              sh 'docker-compose logs --no-color testsuite >reports/storm-testsuite.log'
+              sh 'docker cp testsuite:/home/tester/storm-testsuite/reports reports'
+              archiveArtifacts 'reports/**'
+            }
           }
         }
-      }, 'clean-deployment': {
-        environment {
-          UPDATE_FROM=""
-        }
-        steps {
-          container('docker-runner') {
-            cleanWs notFailBuild: true
-            checkout scm
-            pushd docker
-            sh 'docker create network example'
-            sh 'docker compose up --build --abort-on-container-exit'
-            popd
-            sh 'mkdir reports'
-            sh 'docker-compose logs --no-color storm >reports/storm.log'
-            sh 'docker-compose logs --no-color testsuite >reports/storm-testsuite.log'
-            sh 'docker cp testsuite:/home/tester/storm-testsuite/reports reports'
-            archiveArtifacts 'reports/**'
+        stage('clean-deployment') {
+          environment {
+            UPDATE_FROM=""
+          }
+          steps {
+            container('docker-runner') {
+              cleanWs notFailBuild: true
+              checkout scm
+              pushd docker
+              sh 'docker create network example'
+              sh 'docker compose up --build --abort-on-container-exit'
+              popd
+              sh 'mkdir reports'
+              sh 'docker-compose logs --no-color storm >reports/storm.log'
+              sh 'docker-compose logs --no-color testsuite >reports/storm-testsuite.log'
+              sh 'docker cp testsuite:/home/tester/storm-testsuite/reports reports'
+              archiveArtifacts 'reports/**'
+            }
           }
         }
       }
