@@ -40,7 +40,7 @@ function upload_reports_and_logs() {
     echo ${REPORT_TARBALL_URL}
   fi
 }
-  
+
 function cleanup(){
   retcod=$?
   if [ $retcod != 0 ]; then
@@ -57,7 +57,7 @@ trap cleanup EXIT SIGINT SIGTERM SIGABRT
 
 export UPDATE_FROM=${UPDATE_FROM}
 cd docker
-docker network example
+docker network create example
 docker-compose up --build --abort-on-container-exit
 
 set +e
