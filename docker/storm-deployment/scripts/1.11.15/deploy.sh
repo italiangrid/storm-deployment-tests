@@ -34,8 +34,8 @@ sh ./configure.sh
 # Sleep more in bdii init script to avoid issues on docker
 sed -i 's/sleep 2/sleep 5/' /etc/init.d/bdii
 
-# do yaim
-/opt/glite/yaim/bin/yaim -c -s /etc/storm/siteinfo/storm.def -n se_storm_backend -n se_storm_frontend -n se_storm_gridftp -n se_storm_webdav
-
 # post operations
 sh ./post-install.sh
+
+# do yaim
+/opt/glite/yaim/bin/yaim -c -s /etc/storm/siteinfo/storm.def -n se_storm_backend -n se_storm_frontend -n se_storm_gridftp -n se_storm_webdav
