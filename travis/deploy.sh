@@ -6,7 +6,7 @@ TRAVIS_REPO_SLUG=${TRAVIS_REPO_SLUG:-italiangrid/storm-deployment-tests}
 TRAVIS_JOB_ID=${TRAVIS_JOB_ID:-0}
 TRAVIS_JOB_NUMBER=${TRAVIS_JOB_NUMBER:-0}
 REPORT_REPO_URL=${REPORT_REPO_URL:-}
-UPDATE_FROM=${UPDATE_FROM:-stable}
+UPGRADE_FROM=${UPGRADE_FROM:-stable}
 
 docker --version
 docker-compose --version
@@ -55,7 +55,7 @@ function cleanup(){
 
 trap cleanup EXIT SIGINT SIGTERM SIGABRT
 
-export UPDATE_FROM=${UPDATE_FROM}
+export UPGRADE_FROM=${UPGRADE_FROM}
 cd docker
 docker network create example
 docker-compose up --build --abort-on-container-exit
