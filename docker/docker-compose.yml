@@ -11,8 +11,6 @@ services:
     dns_search: example
     hostname: redis-server.example
     image: redis:latest
-    depends_on:
-      - storm
     networks:
       default:
         aliases:
@@ -32,7 +30,7 @@ services:
       - MODE
       - CDMI_CLIENT_SECRET
     env_file:
-    - cdmi-storm.env
+      - cdmi-storm.env
     networks:
       default:
         aliases:
@@ -49,7 +47,9 @@ services:
       - CDMI_CLIENT_SECRET
       - IAM_USER_PASSWORD
     env_file:
-    - storm-testsuite.env
+      - storm-testsuite.env
+#    volumes:
+#      - /Users/vianello/git/storm-testsuite:/home/tester/storm-testsuite
     depends_on:
       - storm
     networks:

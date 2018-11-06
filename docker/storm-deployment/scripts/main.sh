@@ -2,7 +2,7 @@
 set -ex
 trap "exit 1" TERM
 
-if [ -z ${UPDATE_TO+x} ]; then echo "UPDATE_TO is unset"; exit 1; fi
+if [ -z ${TARGET_RELEASE+x} ]; then echo "TARGET_RELEASE is unset"; exit 1; fi
 
 # install UMD repositories
 sh ./install-umd-repos.sh
@@ -19,13 +19,13 @@ if [ $? != 0 ]; then
     exit 1
 fi
 
-if [ -z ${UPDATE_FROM+x} ]; then
+if [ -z ${UPGRADE_FROM+x} ]; then
 
-  echo "UPDATE_FROM is unset - it's a clean deployment";
+  echo "UPGRADE_FROM is unset - it's a clean deployment";
 
 else
 
-  cd ${UPDATE_FROM}
+  cd ${UPGRADE_FROM}
   sh ./deploy.sh
   cd ..
 
@@ -40,11 +40,11 @@ else
 
 fi
 
-cd ${UPDATE_TO}
+cd ${TARGET_RELEASE}
 sh ./deploy.sh
 cd ..
 
-sh ./fixture.sh ${UPDATE_TO}
+sh ./fixture.sh ${TARGET_RELEASE}
 
 /usr/libexec/storm-info-provider get-report-json
 cat /etc/storm/info-provider/site-report.json

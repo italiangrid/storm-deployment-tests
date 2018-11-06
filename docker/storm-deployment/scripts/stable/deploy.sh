@@ -16,8 +16,10 @@ trap "exit 1" TERM
 # pre install script
 sh ./pre-install.sh
 
-if [ -z ${STORM_STABLE_REPO+x} ]; then echo "STORM_STABLE_REPO is unset"; exit 1; fi
-sh ./install-repo.sh ${STORM_STABLE_REPO} storm-stable
+source ./deploy.env
+
+if [ -z ${STORM_REPO+x} ]; then echo "STORM_REPO is unset"; exit 1; fi
+sh ./install-repo.sh ${STORM_REPO} storm-stable
 
 # install
 yum clean all
