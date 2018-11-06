@@ -9,75 +9,43 @@ pipeline {
   triggers { cron('@daily') }
 
   parameters {
-    string(name: '', defaultValue: 'centos6', description: 'OS Platform')
+    choice(choices: '\nstable\numd', name: 'UPDATE_FROM', description: '')
   }
 
   stages {
+    stage('build') {
+      steps {
+        container('docker-runner') {
+          script {
+            cleanWs notFailBuild: true
+            checkout scm
+          }
+          dir('docker') {
+            sh 'docker-compose build'
+          }
+        }
+      }
+    }
     stage('run') {
-      parallel {
-        stage('update-from-umd') {
-          environment {
-            UPDATE_FROM="umd"
-          }
-          steps {
-            container('docker-runner') {
-              cleanWs notFailBuild: true
-              checkout scm
+      environment {
+        UPDATE_FROM="${params.UPDATE_FROM}"
+      }
+      steps {
+        container('docker-runner') {
+          script {
+            withCredentials([
+              usernamePassword(credentialsId: 'fa43a013-7c86-410f-8a8f-600b92706989', passwordVariable: 'CDMI_CLIENT_SECRET', usernameVariable: 'CDMI_CLIENT_ID'),
+              usernamePassword(credentialsId: 'a5ca708a-eca8-4fc0-83cd-eb3695f083a1', passwordVariable: 'IAM_USER_PASSWORD', usernameVariable: 'IAM_USER_NAME')
+            ]) {
               sh """
-mkdir reports
-cd docker
-docker create network example
-docker-compose up --build --abort-on-container-exit
-cd ..
-docker-compose logs --no-color storm >reports/storm.log
-docker-compose logs --no-color testsuite >reports/storm-testsuite.log
-docker cp testsuite:/home/tester/storm-testsuite/reports reports
+    cd docker
+    mkdir -p output/logs
+    docker-compose up --no-color --abort-on-container-exit || true
+    docker-compose logs --no-color storm >output/logs/storm.log
+    docker-compose logs --no-color storm-testsuite >output/logs/storm-testsuite.log
+    docker cp testsuite:/home/tester/storm-testsuite/reports output
+    cd ..
 """
-              archiveArtifacts 'reports/**'
-            }
-          }
-        }
-        stage('update-from-stable') {
-          environment {
-            UPDATE_FROM="stable"
-          }
-          steps {
-            container('docker-runner') {
-              cleanWs notFailBuild: true
-              checkout scm
-              sh """
-mkdir reports
-cd docker
-docker create network example
-docker-compose up --build --abort-on-container-exit
-cd ..
-docker-compose logs --no-color storm >reports/storm.log
-docker-compose logs --no-color testsuite >reports/storm-testsuite.log
-docker cp testsuite:/home/tester/storm-testsuite/reports reports
-"""
-              archiveArtifacts 'reports/**'
-            }
-          }
-        }
-        stage('clean-deployment') {
-          environment {
-            UPDATE_FROM=""
-          }
-          steps {
-            container('docker-runner') {
-              cleanWs notFailBuild: true
-              checkout scm
-              sh """
-mkdir reports
-cd docker
-docker create network example
-docker-compose up --build --abort-on-container-exit
-cd ..
-docker-compose logs --no-color storm >reports/storm.log
-docker-compose logs --no-color testsuite >reports/storm-testsuite.log
-docker cp testsuite:/home/tester/storm-testsuite/reports reports
-"""
-              archiveArtifacts 'reports/**'
             }
           }
         }
@@ -85,6 +53,18 @@ docker cp testsuite:/home/tester/storm-testsuite/reports reports
     }
   }
   post {
+    always {
+      archiveArtifacts 'docker/output/**'
+      step([$class: 'RobotPublisher',
+          disableArchiveOutput: false,
+          logFileName: 'log.html',
+          otherFiles: '*.png',
+          outputFileName: 'output.xml',
+          outputPath: "docker/output/reports",
+          passThreshold: 100,
+          reportFileName: 'report.html',
+          unstableThreshold: 90])
+    }
     failure {
       slackSend color: 'danger', message: "${env.JOB_NAME} - #${env.BUILD_ID} Failure (<${env.BUILD_URL}|Open>)"
     }

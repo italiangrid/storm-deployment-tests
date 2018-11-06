@@ -9,7 +9,7 @@ VOMS_FAKE="${VOMS_FAKE:-true}"
 STORM_BE_SYNC_PORT="${STORM_BE_SYNC_PORT:-8444}"
 STORM_BE_HOST="${STORM_BE_HOST:-storm.example}"
 
-CDMI_ENDPOINT="${CDMI_ENDPOINT:-cdmi-storm.cnaf.infn.it:8888}"
+CDMI_ENDPOINT="${CDMI_ENDPOINT:-cdmi-storm.example:8888}"
 CDMI_CLIENT_ID="${CDMI_CLIENT_ID:-838129a5-84ca-4dc4-bfd8-421ee317aabd}"
 IAM_USER_NAME="${IAM_USER_NAME:-storm_robot_user}"
 
@@ -68,7 +68,11 @@ if [ $attempts -gt $MAX_RETRIES ]; then
     exit 1
 fi
 
-git clone $TESTSUITE --branch $TESTSUITE_BRANCH
-cd storm-testsuite
+if [ -d "storm-testsuite" ]; then
+  cd storm-testsuite
+else
+  git clone $TESTSUITE --branch $TESTSUITE_BRANCH
+  cd storm-testsuite
+fi
 
 pybot --pythonpath .:lib $VARIABLES $EXCLUDE -d reports -s $TESTSUITE_SUITE tests
