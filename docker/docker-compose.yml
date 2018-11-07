@@ -67,7 +67,8 @@ services:
     hostname: storm.example
     entrypoint: /bin/bash deploy.sh
     environment:
-      - MODE
+      - UPGRADE_FROM
+      - TARGET_RELEASE
     env_file:
       - storm-deployment.env
     ports:
