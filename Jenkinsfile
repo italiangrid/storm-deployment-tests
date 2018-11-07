@@ -10,6 +10,7 @@ pipeline {
 
   parameters {
     choice(choices: '\nstable\numd', name: 'UPGRADE_FROM', description: '')
+    choice(choices: '1.11.15\nlatest\nstable\numd', name: 'TARGET_RELEASE', description: '')
   }
 
   stages {
@@ -28,6 +29,7 @@ pipeline {
     }
     stage('run') {
       environment {
+        TARGET_RELEASE="${params.TARGET_RELEASE}"
         UPGRADE_FROM="${params.UPGRADE_FROM}"
       }
       steps {
