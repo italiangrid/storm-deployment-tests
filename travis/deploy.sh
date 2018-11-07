@@ -2,11 +2,11 @@
 set -e
 [[ -n "${STORM_DEPLOYMENT_TEST_DEBUG}" ]] && set -x
 
-TRAVIS_REPO_SLUG=${TRAVIS_REPO_SLUG:-italiangrid/storm-deployment-test}
+TRAVIS_REPO_SLUG=${TRAVIS_REPO_SLUG:-italiangrid/storm-deployment-tests}
 TRAVIS_JOB_ID=${TRAVIS_JOB_ID:-0}
 TRAVIS_JOB_NUMBER=${TRAVIS_JOB_NUMBER:-0}
 REPORT_REPO_URL=${REPORT_REPO_URL:-}
-MODE=${MODE:-clean}
+UPGRADE_FROM=${UPGRADE_FROM:-stable}
 
 docker --version
 docker-compose --version
@@ -17,9 +17,9 @@ function tar_reports_and_logs(){
   if [ ! -d ${reports_dir} ]; then
     mkdir -p ${reports_dir}
   fi
-  docker-compose logs --no-color docker-storm >${reports_dir}/storm.log
-  docker-compose logs --no-color docker-storm-testsuite >${reports_dir}/storm-testsuite.log
-  docker cp docker-storm-testsuite:/home/tester/storm-testsuite/reports ${reports_dir}
+  docker-compose logs --no-color storm >${reports_dir}/storm.log
+  docker-compose logs --no-color testsuite >${reports_dir}/storm-testsuite.log
+  docker cp testsuite:/home/tester/storm-testsuite/reports ${reports_dir}
   tar cvzf reports.tar.gz reports
 }
 
@@ -40,7 +40,7 @@ function upload_reports_and_logs() {
     echo ${REPORT_TARBALL_URL}
   fi
 }
-  
+
 function cleanup(){
   retcod=$?
   if [ $retcod != 0 ]; then
@@ -55,14 +55,14 @@ function cleanup(){
 
 trap cleanup EXIT SIGINT SIGTERM SIGABRT
 
-export MODE=${MODE}
+export UPGRADE_FROM=${UPGRADE_FROM}
 cd docker
-docker network create cnaf.infn.it
+docker network create example
 docker-compose up --build --abort-on-container-exit
 
 set +e
 
-ts_ec=$(docker inspect docker-storm-testsuite -f '{{.State.ExitCode}}')
+ts_ec=$(docker inspect testsuite -f '{{.State.ExitCode}}')
 
 tar_reports_and_logs
 set -e

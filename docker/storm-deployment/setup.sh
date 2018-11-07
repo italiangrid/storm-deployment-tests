@@ -18,9 +18,6 @@ if [[ ( $? -eq 4 ) || ( $? -eq 6 ) ]]; then
   exit 1
 fi
 
-# Added missing package to avoid fetch-crl packaging bug
-yum install -y perl-libwww-perl.noarch
-
 # install acl and extended attributes support
 yum install -y attr acl fetch-crl
 
@@ -33,8 +30,8 @@ if [ $? != 0 ]; then
 fi
 
 # install host certificate
-cp /storm-certificates/docker_storm_cnaf_infn_it.cert.pem /etc/grid-security/hostcert.pem
-cp /storm-certificates/docker_storm_cnaf_infn_it.key.pem /etc/grid-security/hostkey.pem
+cp /storm-certificates/storm-example-cert.pem /etc/grid-security/hostcert.pem
+cp /storm-certificates/storm-example-key.pem /etc/grid-security/hostkey.pem
 chmod 400 /etc/grid-security/hostkey.pem
 chmod 644 /etc/grid-security/hostcert.pem
 service rsyslog start
