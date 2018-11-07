@@ -9,7 +9,7 @@ pipeline {
   triggers { cron('@daily') }
 
   parameters {
-    choice(choices: '\nstable\numd', name: 'UPDATE_FROM', description: '')
+    choice(choices: '\nstable\numd', name: 'UPGRADE_FROM', description: '')
   }
 
   stages {
@@ -28,7 +28,7 @@ pipeline {
     }
     stage('run') {
       environment {
-        UPDATE_FROM="${params.UPDATE_FROM}"
+        UPGRADE_FROM="${params.UPGRADE_FROM}"
       }
       steps {
         container('docker-runner') {
