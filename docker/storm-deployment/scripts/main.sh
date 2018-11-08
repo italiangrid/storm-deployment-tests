@@ -19,9 +19,9 @@ if [ $? != 0 ]; then
     exit 1
 fi
 
-if [ -z ${UPGRADE_FROM+x} ]; then
+if [ -z ${UPGRADE_FROM} ]; then
 
-  echo "UPGRADE_FROM is unset - it's a clean deployment";
+  echo "UPGRADE_FROM is empty or unset - it's a clean deployment";
 
 else
 
