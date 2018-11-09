@@ -48,6 +48,7 @@ pipeline {
     docker-compose logs --no-color storm >output/logs/storm.log
     docker-compose logs --no-color storm-testsuite >output/logs/storm-testsuite.log
     docker cp testsuite:/home/tester/storm-testsuite/reports output
+    docker cp storm:/var/log/storm output
     docker-compose down
     cd ..
 """
