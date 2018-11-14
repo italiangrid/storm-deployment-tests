@@ -11,7 +11,7 @@ pipeline {
 
   parameters {
     choice(choices: '\nstable\numd', name: 'UPGRADE_FROM', description: '')
-    choice(choices: '1.11.15\nlatest\nstable\numd', name: 'TARGET_RELEASE', description: '')
+    choice(choices: 'nightly\nstable\numd', name: 'TARGET_RELEASE', description: '')
   }
 
   stages {

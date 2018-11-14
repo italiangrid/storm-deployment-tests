@@ -19,7 +19,7 @@ sh ./pre-install.sh
 source ./deploy.env
 
 if [ -z ${STORM_REPO+x} ]; then echo "STORM_REPO is unset"; exit 1; fi
-sh ./install-repo.sh ${STORM_REPO} storm
+sh ./install-repo.sh ${STORM_REPO} storm-nightly
 
 # install
 yum clean all
