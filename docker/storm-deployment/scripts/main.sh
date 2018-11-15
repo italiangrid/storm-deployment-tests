@@ -2,7 +2,10 @@
 set -ex
 trap "exit 1" TERM
 
-if [ -z ${TARGET_RELEASE+x} ]; then echo "TARGET_RELEASE is unset"; exit 1; fi
+if [ -z ${TARGET_RELEASE+x} ]; then
+    echo "TARGET_RELEASE is unset - 'nightly' will be used as target";
+    TARGET_RELEASE="nightly"
+fi
 
 # install UMD repositories
 sh ./install-umd-repos.sh
