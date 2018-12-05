@@ -1,62 +1,41 @@
-def label = "worker-${UUID.randomUUID().toString()}"
+pipeline {
+    agent {
+        kubernetes {
+            label "storm-deployment-test-${env.BUILD_NUMBER}"
+            cloud 'Kube mwdevel'
+            defaultContainer 'jnlp'
+            yamlFile 'jenkins/pod.yaml'
+        }
+    }
 
-podTemplate(
-    label: label,
-    cloud: 'Kube mwdevel',
-    nodeSelector: 'zone=ci-test',
-    containers: [
-        containerTemplate(
-          name: 'storm-deployment-runner',
-          image: 'italiangrid/kube-docker-runner:latest',
-          command: 'cat',
-          ttyEnabled: true,
-          resourceRequestCpu: '500m',
-          resourceLimitCpu: '900m',
-          resourceRequestMemory: '3Gi',
-          resourceLimitMemory: '4Gi'
-        )
-    ],
-    volumes: [
-        hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock'),
-        secretVolume(mountPath: '/home/jenkins/.docker', secretName: 'registry-auth-basic'),
-        secretVolume(mountPath: '/home/jenkins/.ssh', secretName: 'jenkins-ssh-keys'),
-        persistentVolumeClaim(mountPath: '/srv/scratch', claimName: 'scratch-area-claim', readOnly: false)
-    ],
-    imagePullSecrets: ['jenkins-docker-registry']
-) {
+    options {
+        timeout(time: 1, unit: 'HOURS')
+        buildDiscarder(logRotator(numToKeepStr: '5'))
+    }
 
     parameters {
         choice(choices: '\nstable\numd', name: 'UPGRADE_FROM', description: '')
         choice(choices: 'nightly\nstable\numd', name: 'TARGET_RELEASE', description: '')
     }
 
-    node(label) {
+    environment {
+        TARGET_RELEASE = "${params.TARGET_RELEASE}"
+        UPGRADE_FROM = "${params.UPGRADE_FROM}"
+    }
 
-        stage('build') {
-            container('storm-deployment-runner') {
-                script {
-                    deleteDir()
-                    checkout scm
-                }
-                dir('docker') {
-                    sh 'docker-compose build'
-                }
-            }
-        }
+    stages {
+        stage('Run') {
+            steps {
+                container('kube-docker-runner') {
+                    sh 'env | grep UPGRADE_FROM'
+                    sh 'env | grep TARGET_RELEASE'
 
-        try {
-            stage('run') {
-                environment {
-                    TARGET_RELEASE="${params.TARGET_RELEASE}"
-                    UPGRADE_FROM="${params.UPGRADE_FROM}"
-                }
-                container('storm-deployment-runner') {
                     script {
                         withCredentials([
                             usernamePassword(credentialsId: 'a5ca708a-eca8-4fc0-83cd-eb3695f083a1', passwordVariable: 'CDMI_CLIENT_SECRET', usernameVariable: 'CDMI_CLIENT_ID'),
                             usernamePassword(credentialsId: 'fa43a013-7c86-410f-8a8f-600b92706989', passwordVariable: 'IAM_USER_PASSWORD', usernameVariable: 'IAM_USER_NAME')
                         ]) {
-                            sh """
+                          sh """
 cd docker
 mkdir -p output/logs
 mkdir -p output/var/log
@@ -77,11 +56,10 @@ cd ..
                     }
                 }
             }
-        } catch (error) {
-
-            slackSend color: 'danger', message: "${env.JOB_NAME} - #${env.BUILD_ID} Failure (<${env.BUILD_URL}|Open>)"
-
-        } finally {
+        }
+    }
+    post {
+        always {
             archiveArtifacts 'docker/output/**'
             step([$class: 'RobotPublisher',
                 disableArchiveOutput: false,
@@ -92,7 +70,12 @@ cd ..
                 passThreshold: 100,
                 reportFileName: 'report.html',
                 unstableThreshold: 90])
-            script{
+        }
+        failure {
+          slackSend color: 'danger', message: "${env.JOB_NAME} - #${env.BUILD_ID} Failure (<${env.BUILD_URL}|Open>)"
+        }
+        changed {
+            script {
                 if('SUCCESS'.equals(currentBuild.result)) {
                     slackSend color: 'good', message: "${env.JOB_NAME} - #${env.BUILD_ID} Back to normal (<${env.BUILD_URL}|Open>)"
                 }
