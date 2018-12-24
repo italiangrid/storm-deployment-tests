@@ -37,9 +37,9 @@ services:
           - cdmi-storm.example
 
   storm-testsuite:
-    image: italiangrid/storm-testsuite
+    image: italiangrid/storm-testsuite:centos7
     build:
-      context: ./storm-testsuite
+      context: ./storm-testsuite/centos7
     container_name: testsuite
     dns_search: example
     hostname: storm-testsuite.example

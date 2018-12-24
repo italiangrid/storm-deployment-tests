@@ -2,14 +2,14 @@ FROM italiangrid/base:centos6
 
 ADD . /
 
-run chmod +x /setup.sh
-run /setup.sh
+RUN chmod +x /setup.sh
+RUN sh /setup.sh
 
 # expose StoRM ports
-expose 8080 8085 8086 8443 8444 9998
+EXPOSE 8080 8085 8086 8443 8444 9998
 
 # setup deployment script
-run chmod +x /deploy.sh
+RUN chmod +x /deploy.sh
 
 # setup StoRM daemons
-run chmod -R +x /daemons
+RUN chmod -R +x /daemons

@@ -7,11 +7,11 @@ if [ -z ${TARGET_RELEASE+x} ]; then
     TARGET_RELEASE="nightly"
 fi
 
-# install UMD repositories
-sh ./install-umd-repos.sh
-
 # add storm user
 adduser -r storm
+
+# install UMD repositories
+sh ./install-umd-repos.sh
 
 # update all
 yum clean all
