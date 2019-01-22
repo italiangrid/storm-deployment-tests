@@ -27,15 +27,17 @@ pipeline {
         stage('Run') {
             steps {
                 container('kube-docker-runner') {
-                    sh 'env | grep UPGRADE_FROM'
-                    sh 'env | grep TARGET_RELEASE'
 
                     script {
                         withCredentials([
                             usernamePassword(credentialsId: 'a5ca708a-eca8-4fc0-83cd-eb3695f083a1', passwordVariable: 'CDMI_CLIENT_SECRET', usernameVariable: 'CDMI_CLIENT_ID'),
                             usernamePassword(credentialsId: 'fa43a013-7c86-410f-8a8f-600b92706989', passwordVariable: 'IAM_USER_PASSWORD', usernameVariable: 'IAM_USER_NAME')
                         ]) {
-                          sh """
+
+                            echo "UPGRADE_FROM=${env.UPGRADE_FROM}"
+                            echo "TARGET_RELEASE=${env.TARGET_RELEASE}"
+
+                            sh """
 cd docker
 mkdir -p output/logs
 mkdir -p output/var/log

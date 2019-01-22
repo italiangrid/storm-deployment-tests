@@ -3,7 +3,7 @@ set -x
 
 # Optional parameters
 TESTSUITE="${TESTSUITE:-git://github.com/italiangrid/storm-testsuite.git}"
-TESTSUITE_BRANCH="${TESTSUITE_BRANCH:-develop}"
+TESTSUITE_BRANCH="${TESTSUITE_BRANCH:-nightly}"
 VOMS_FAKE="${VOMS_FAKE:-true}"
 
 STORM_BE_SYNC_PORT="${STORM_BE_SYNC_PORT:-8444}"
@@ -75,4 +75,4 @@ else
   cd storm-testsuite
 fi
 
-pybot --pythonpath .:lib $VARIABLES $EXCLUDE -d reports -s $TESTSUITE_SUITE tests
+robot --pythonpath .:lib $VARIABLES $EXCLUDE -d reports -s $TESTSUITE_SUITE tests
