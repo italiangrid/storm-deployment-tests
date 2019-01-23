@@ -1,23 +1,10 @@
 version: '2.1'
 
-volumes:
-  trustanchors:
-  cabundle:
-
 networks:
   default:
     name: example
 
 services:
-
-  trust:
-    container_name: trust
-    image: indigoiam/trustanchors
-    environment:
-      - FORCE_TRUST_ANCHORS_UPDATE=1
-    volumes:
-      - trustanchors:/etc/grid-security/certificates
-      - cabundle:/etc/pki
 
   redis-server:
     container_name: redis
@@ -65,14 +52,10 @@ services:
 #      - /Users/vianello/git/storm-testsuite:/home/tester/storm-testsuite
     depends_on:
       - storm
-      - trust
     networks:
       default:
         aliases:
           - storm-testsuite.example
-    volumes:
-      - cabundle:/etc/pki
-      - trustanchors:/etc/grid-security/certificates
 
   storm:
     image: italiangrid/storm-deployment:centos6
@@ -98,8 +81,3 @@ services:
       default:
         aliases:
           - storm.example
-    depends_on:
-      - trust
-    volumes:
-      - cabundle:/etc/pki
-      - trustanchors:/etc/grid-security/certificates
