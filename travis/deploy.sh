@@ -58,7 +58,7 @@ trap cleanup EXIT SIGINT SIGTERM SIGABRT
 export UPGRADE_FROM=${UPGRADE_FROM}
 cd docker
 docker network create example
-docker-compose up --build --abort-on-container-exit
+docker-compose up --build --abort-on-container-exit storm-testsuite
 
 set +e
 
