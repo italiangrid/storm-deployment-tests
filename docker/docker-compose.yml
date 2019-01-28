@@ -50,8 +50,7 @@ services:
           - cdmi-storm.example
 
   storm-testsuite:
-    image: ${DOCKER_REGISTRY_HOST}/italiangrid/storm-testsuite:${STORM_TESTSUITE_IMAGE_TAG}
-    image: italiangrid/storm-testsuite:${STORM_TESTSUITE_IMAGE_TAG}
+    image: italiangrid/storm-testsuite:centos7
     build:
       context: ./storm-testsuite/centos7
     container_name: testsuite
@@ -62,8 +61,6 @@ services:
       - IAM_USER_PASSWORD
     env_file:
       - storm-testsuite.env
-#    volumes:
-#      - /Users/vianello/git/storm-testsuite:/home/tester/storm-testsuite
     depends_on:
       - storm
       - cdmi-storm
@@ -77,7 +74,6 @@ services:
           - storm-testsuite.example
 
   storm:
-    image: ${DOCKER_REGISTRY_HOST}/italiangrid/storm-deployment:centos6
     image: italiangrid/storm-deployment:centos6
     build:
       context: ./storm-deployment
