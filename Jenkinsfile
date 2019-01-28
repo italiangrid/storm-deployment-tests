@@ -38,7 +38,7 @@ pipeline {
                             echo "TARGET_RELEASE=${env.TARGET_RELEASE}"
 
                             dir("docker") {
-                              sh "./run.sh"
+                              sh "bash ./run.sh"
                             }
                         }
                     }
