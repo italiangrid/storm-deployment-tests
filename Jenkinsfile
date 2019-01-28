@@ -37,24 +37,9 @@ pipeline {
                             echo "UPGRADE_FROM=${env.UPGRADE_FROM}"
                             echo "TARGET_RELEASE=${env.TARGET_RELEASE}"
 
-                            sh """
-cd docker
-mkdir -p output/logs
-mkdir -p output/var/log
-mkdir -p output/etc
-mkdir -p output/etc/sysconfig
-docker-compose down
-docker network create example
-docker-compose up --no-color storm-testsuite
-docker-compose logs --no-color storm >output/logs/storm.log
-docker-compose logs --no-color storm-testsuite >output/logs/storm-testsuite.log
-docker cp testsuite:/home/tester/storm-testsuite/reports output
-docker cp storm:/var/log/storm output/var/log
-docker cp storm:/etc/storm output/etc
-docker cp storm:/etc/sysconfig/storm-webdav output/etc/sysconfig
-docker-compose down
-cd ..
-"""
+                            dir("docker") {
+                              sh "./run.sh"
+                            }
                         }
                     }
                 }

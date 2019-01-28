@@ -11,16 +11,10 @@ UPGRADE_FROM=${UPGRADE_FROM:-stable}
 docker --version
 docker-compose --version
 
-reports_dir=./reports
+reports_dir=./output
 
 function tar_reports_and_logs(){
-  if [ ! -d ${reports_dir} ]; then
-    mkdir -p ${reports_dir}
-  fi
-  docker-compose logs --no-color storm >${reports_dir}/storm.log
-  docker-compose logs --no-color testsuite >${reports_dir}/storm-testsuite.log
-  docker cp testsuite:/home/tester/storm-testsuite/reports ${reports_dir}
-  tar cvzf reports.tar.gz reports
+  tar cvzf reports.tar.gz ${reports_dir}
 }
 
 function upload_reports_and_logs() {
@@ -57,8 +51,7 @@ trap cleanup EXIT SIGINT SIGTERM SIGABRT
 
 export UPGRADE_FROM=${UPGRADE_FROM}
 cd docker
-docker network create example
-docker-compose up storm-testsuite
+sh run.sh
 
 set +e
 
@@ -67,7 +60,6 @@ ts_ec=$(docker inspect testsuite -f '{{.State.ExitCode}}')
 tar_reports_and_logs
 set -e
 upload_reports_and_logs
-docker-compose stop
 
 if [ ${ts_ec} != 0 ]; then
   exit 1
