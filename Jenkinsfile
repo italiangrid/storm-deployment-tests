@@ -44,7 +44,8 @@ mkdir -p output/var/log
 mkdir -p output/etc
 mkdir -p output/etc/sysconfig
 docker-compose down
-docker-compose up --no-color --abort-on-container-exit || true
+docker network create example
+docker-compose up --build --abort-on-container-exit storm-testsuite
 docker-compose logs --no-color storm >output/logs/storm.log
 docker-compose logs --no-color storm-testsuite >output/logs/storm-testsuite.log
 docker cp testsuite:/home/tester/storm-testsuite/reports output
