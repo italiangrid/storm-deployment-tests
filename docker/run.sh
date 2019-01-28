@@ -11,8 +11,10 @@ mkdir -p ${outputDir}/var/log
 mkdir -p ${outputDir}/etc
 mkdir -p ${outputDir}/etc/sysconfig
 
-# Stop if compose is running and remove local images
+# Stop if compose is running
 docker-compose down --rmi all
+# Pull images from dockerhub
+docker-compose pull
 
 # Deployemnt test
 docker network create example
