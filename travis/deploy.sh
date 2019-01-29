@@ -13,11 +13,9 @@ docker-compose --version
 
 reports_dir=./output
 
-function tar_reports_and_logs(){
-  tar cvzf reports.tar.gz ${reports_dir}
-}
-
 function upload_reports_and_logs() {
+
+  tar cvzf reports.tar.gz ${reports_dir}
   if [ -r reports.tar.gz ]; then
     if [ -z "${REPORT_REPO_URL}" ]; then
       echo "Skipping report upload: REPORT_REPO_URL is undefined or empty"
@@ -52,14 +50,11 @@ trap cleanup EXIT SIGINT SIGTERM SIGABRT
 export UPGRADE_FROM=${UPGRADE_FROM}
 cd docker
 sh run.sh
+ts_ec=$?
 
 set +e
-
-ts_ec=$(docker inspect testsuite -f '{{.State.ExitCode}}')
-
-tar_reports_and_logs
-set -e
 upload_reports_and_logs
+set -e
 
 if [ ${ts_ec} != 0 ]; then
   exit 1
