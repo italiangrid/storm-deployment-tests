@@ -47,13 +47,14 @@ function cleanup(){
 
 trap cleanup EXIT SIGINT SIGTERM SIGABRT
 
+
+
 export UPGRADE_FROM=${UPGRADE_FROM}
 cd docker
 sh run.sh
 ts_ec=$?
-
-set +e
 upload_reports_and_logs
+
 set -e
 
 if [ ${ts_ec} != 0 ]; then

@@ -21,7 +21,7 @@ docker network create example
 docker-compose up --no-color storm-testsuite
 
 # Save logs
-docker-compose logs --no-color cdmi >${outputDir}/logs/cdmi.log
+docker-compose logs --no-color cdmi-storm >${outputDir}/logs/cdmi.log
 docker-compose logs --no-color storm >${outputDir}/logs/storm.log
 docker-compose logs --no-color storm-testsuite >${outputDir}/logs/storm-testsuite.log
 docker cp testsuite:/home/tester/storm-testsuite/reports ${outputDir}
