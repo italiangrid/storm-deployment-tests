@@ -18,10 +18,15 @@ docker-compose pull
 
 # Deployemnt test
 docker network create example
+docker-compose up --no-color -d storm
+docker-compose logs -f cdmi-storm redis-server trust storm &
 docker-compose up --no-color storm-testsuite
+kill %1 #kill the first background progress: tail
 
 # Save logs
+docker-compose logs --no-color trust >${outputDir}/logs/cdmi.log
 docker-compose logs --no-color cdmi-storm >${outputDir}/logs/cdmi.log
+docker-compose logs --no-color redis-server >${outputDir}/logs/cdmi.log
 docker-compose logs --no-color storm >${outputDir}/logs/storm.log
 docker-compose logs --no-color storm-testsuite >${outputDir}/logs/storm-testsuite.log
 docker cp testsuite:/home/tester/storm-testsuite/reports ${outputDir}
