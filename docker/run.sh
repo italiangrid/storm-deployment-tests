@@ -19,7 +19,7 @@ docker-compose pull
 # Deployemnt test
 docker network create example
 docker-compose up --no-color -d storm
-docker-compose logs -f cdmi-storm redis-server trust storm &
+docker-compose logs --no-color -f cdmi-storm redis-server trust storm &
 docker-compose up --no-color storm-testsuite
 kill %1 #kill the first background progress: tail
 
