@@ -3,13 +3,9 @@ set -ex
 
 tags=${tags:-"centos6"}
 
-if [ -n "${DOCKERHUB_USERNAME}" ] && [ -n "${DOCKERHUB_PASSWORD}" ]; then
+for t in ${tags}; do
 
-    docker login -u ${DOCKERHUB_USERNAME} -p ${DOCKERHUB_PASSWORD}
+  echo "Pushing italiangrid/storm-deployment:${t} on dockerhub ..."
+  docker push italiangrid/storm-deployment:${t}
 
-    for t in ${tags}; do
-
-        docker push italiangrid/storm-deployment:${t}
-
-    done
-fi
+done
