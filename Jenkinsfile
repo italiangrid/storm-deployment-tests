@@ -14,8 +14,8 @@ pipeline {
     }
 
     parameters {
-        choice(choices: '\nstable\numd', name: 'UPGRADE_FROM', description: '')
-        choice(choices: 'nightly\nstable\numd', name: 'TARGET_RELEASE', description: '')
+        choice(choices: '\nstable\nbeta\numd', name: 'UPGRADE_FROM', description: '')
+        choice(choices: 'nightly\nbeta\nstable\numd', name: 'TARGET_RELEASE', description: '')
     }
 
     environment {
