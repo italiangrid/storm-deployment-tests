@@ -13,11 +13,13 @@ env:
   - secure: NBXElN0BSKrUbmRsRbUsMo+Rs3VvfByQoHtkS754y7r1gzWcRmdVruo8BVPEXPdPakZC4ncs/yQgENBrTQlKaXjhksbp8htsnC9Aas/drZCdCNba9OFeflIMVEAngJfrf33/j9DscPGLU2taGthJailGijEN7HY/7BQ7ghfwwsK4KMoB4rHQe9h3R1/uQe+2VQnBMhwLO/1Yn/WWmHkX5UQFGS3Tnn4+gWNj26ngrgQhFAVO77cs1cdij9AHtEHrl/sbIDQp2yXEQn/LcLBbOH9Jl84sds6aKvKrXCtIkEHpJw12LwBYobJHQOUs59GjdnH2buwEJ2Ann9qN38ZTHaG60y9qcXYuBGC5aytN6GVpy6P1gxLr6oqOzgiZH4NQj7aOwfx3nMPk7Gb0dveZwf0uzhF/WXxRS6wxnRw61wJbMTyZOdAz4s3L1LnDd3JG48IhtSetsdBRNNIH7dbdAnR/tCRCnbOvqMvjkKUqkJqLXjyqY8u2PYJRHoicya2tgfssT80r7Jh7gf974pRWcjKzeIcSq24hN4OQydZD/j3V6MQGjY/05OcknZsjdMchHfrkp0lqlwQLTJ6FxNlPsy0B9rlAL0/U5oFTTC7WA+nspwuwAyDJaTyXBxBFmghp0M8MUpWD1JopcAOHE+qZv9utdu9QcQZiqbMdcZGQDZ0=
   matrix:
   - UPGRADE_FROM="" TARGET_RELEASE=nightly
-  - UPGRADE_FROM=stable TARGET_RELEASE=nightly
-  - UPGRADE_FROM=umd TARGET_RELEASE=nightly
   - UPGRADE_FROM="" TARGET_RELEASE=stable
+  - UPGRADE_FROM="" TARGET_RELEASE=beta
+  - UPGRADE_FROM=umd TARGET_RELEASE=nightly
+  - UPGRADE_FROM=umd TARGET_RELEASE=beta
   - UPGRADE_FROM=umd TARGET_RELEASE=stable
   - UPGRADE_FROM=stable TARGET_RELEASE=nightly
+  - UPGRADE_FROM=stable TARGET_RELEASE=beta
 before_install:
 - sudo rm /usr/local/bin/docker-compose
 - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
