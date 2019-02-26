@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Pod
 metadata:
     labels:
-        some-label: some-label-value
+        ci-job: storm-deployment-test
 spec:
     nodeSelector:
         zone: ci
@@ -38,8 +38,8 @@ spec:
             mountPath: /srv/scratch
         resources:
             requests:
-                memory: 3Gi
+                memory: 4Gi
                 cpu: 1
             limits:
-                memory: 3Gi
+                memory: 4Gi
                 cpu: 1
