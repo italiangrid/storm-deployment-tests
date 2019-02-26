@@ -43,3 +43,4 @@ spec:
             limits:
                 memory: 4Gi
                 cpu: 1
+    restartPolicy: Never
