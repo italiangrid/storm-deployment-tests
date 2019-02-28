@@ -37,10 +37,12 @@ spec:
           - name: scratch
             mountPath: /srv/scratch
         resources:
-            requests:
-                memory: 4Gi
-                cpu: 3
             limits:
-                memory: 4Gi
-                cpu: 3
+                memory: 2Gi
+                cpu: 1
+      - name: jnlp
+        resources:
+            limits:
+                memory: 0.2Gi
+                cpu: 0.2
     restartPolicy: Never
