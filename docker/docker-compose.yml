@@ -93,6 +93,7 @@ services:
       - 8443:8443
       - 8444:8444
       - 9998:9998
+      - 2710:2710
     depends_on:
       - trust
     volumes:

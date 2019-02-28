@@ -6,7 +6,7 @@ RUN chmod +x /setup.sh
 RUN sh /setup.sh
 
 # expose StoRM ports
-EXPOSE 8080 8085 8086 8443 8444 9998
+EXPOSE 8080 8085 8086 8443 8444 9998 2710
 
 # setup deployment script
 RUN chmod +x /deploy.sh
