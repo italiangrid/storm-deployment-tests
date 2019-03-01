@@ -28,9 +28,10 @@ git clone git://github.com/cnaf/ci-puppet-modules.git /ci-puppet-modules
 # exit code '6' means there were both changes and failures
 puppet apply --modulepath=/ci-puppet-modules/modules:/etc/puppet/modules/ --detailed-exitcodes /manifest.pp
 
-stormClientRpmUrl="https://ci.cloud.cnaf.infn.it/view/storm/job/pkg.storm/job/cdmi_el7/lastSuccessfulBuild/artifact/rpms/centos7/storm-srm-client-1.6.1-1.el7.x86_64.rpm"
+# install StoRM stable repo EL7
+yum-config-manager --add-repo https://repo.cloud.cnaf.infn.it/repository/storm/stable/storm-stable-centos7.repo
 
-yum install -y ${stormClientRpmUrl}
+yum install -y storm-srm-client
 
 # check if errors occurred after puppet apply:
 if [[ ( $? -eq 4 ) || ( $? -eq 6 ) ]]; then
