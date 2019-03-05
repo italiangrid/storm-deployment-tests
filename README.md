@@ -4,54 +4,45 @@
 
 Images are automatically downloaded from docker-hub during execution.
 
-If you need to locally build them:
-
-- **italiangrid/storm-testsuite**
-
-```
-cd docker
-cd storm-testsuite
-sh build-image.sh
-```
-
-- **italiangrid/storm-deployment**
-
-```
-cd docker
-cd storm-deployment
-sh build-image.sh
-```
-
 ### Usage
 
-Edit as your needed `.env` files:
+Into `docker` directory, edit as your needed `.env` file:
+
+Create a `.env` file to easily pass your environment variables:
 
 ```
-$ cat docker/storm-testsuite.env
-TESTSUITE_BRANCH=master
-TESTSUITE_EXCLUDE=to-be-fixedORno-btrfsORcdmi
-```
+# StoRM Deployment means:
+# - install UPGRADE_FROM version of StoRM (if defined) and run YAIM
+# - upgrade packages with TARGET_RELEASE packages and re-run YAIM
+# - run testsuite
 
-```
-$ cat docker/storm-deployment.env
-STORM_DEPLOYMENT_TEST_BRANCH=release_1_11_13
-MODE=clean
-PLATFORM=centos6
+# UPGRADE_FROM values: "stable", "nightly", "beta" or not defined (default) when
+# it's a clean deployment of TARGET_RELEASE
+UPGRADE_FROM=""
+
+# TARGET_RELEASE is the version to which storm-testsuite runs against.
+# Values: "nightly", "beta" and "stable". Cannot be empty.
+TARGET_RELEASE="stable"
+
+# Needed by CDMI tests:
+CDMI_CLIENT_SECRET=secret
+IAM_USER_PASSWORD=secret
+
+# Testsuite configuration:
+TESTSUITE_BRANCH=nightly
+TESTSUITE_SUITE=tests
+TESTSUITE_EXCLUDE=to-be-fixedORno-btrfs
+VOMS_FAKE=false
+
+# UMD release used by storm deployment
+UMD_RELEASE_RPM=http://repository.egi.eu/sw/production/umd/4/sl6/x86_64/updates/umd-release-4.1.3-1.el6.noarch.rpm
 ```
 
 **Launch**
 
-Run deployment using docker-compose:
+Run deployment using `run.sh`:
 
 ```
 $ cd docker
-$ docker-compose up -d
-```
-
-Check logs:
-
-```
-$ docker-compose logs -f
-$ docker-compose logs -f docker-storm
-$ docker-compose logs -f docker-storm-testsuite
+$ sh run.sh
 ```

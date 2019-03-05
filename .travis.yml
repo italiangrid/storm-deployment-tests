@@ -4,7 +4,7 @@ services:
 dist: trusty
 env:
   global:
-  - DOCKER_COMPOSE_VERSION=1.18.0
+  - DOCKER_COMPOSE_VERSION=1.23.2
   - SERVICE_WAIT_TIMEOUT=120
   - REPORT_REPO_URL=https://repo.cloud.cnaf.infn.it/repository/travis
   - secure: 4a0XwdOU3Q4jMhEQl8IlzvF1f8NLAO70EvbBP+d9DTbbomV5oiZiR7LCEtRX+9QRirdn/P3xWamc9UVZaVZm6CVesUfvamthcNSR3eREWRvEcHNByavASUeQkhW2CQ+aiBgZRLg3WwxNkdHvlE67h0wYHUrQlrCwIhI3HLdnKpwPVS3blZJcRXapHRo+/WAPwHRObjMx6wS3wndDLeGY2MkH3EDtU29bwYSdcoJI0RYPks7vmv8My2ZVr5w6dg1+VEnBVrGKynQexvbsTwc1p1JDPjGZeO9oRElQJfMxtw2bnzwZGP++iATReis4eyEcV9Lu3yxf2FujcqZU184uyinH1zQpaRXTPuUfypLbjuaFdiYsjNoCz15v+2bQLCmdmfYACPZForVu0Ii59dn0Gu4hGV/qlrhcRWjTTBoNXo7eRc7Jvfsyqi1GOnLy/TZMlVvEtDmMTb/aT/xf5fy2AIeTPuBXzTCsHr2PiXSkORIprBgTGBzpd4vktC+2eoxhDgeVsnjX8H9A/2N82YtcXcfX0Z/6BnNbfYCU9HQkA+QPiPyE673cp/IKNxnbDYY5IoNtf72BopD0xPNTzstDwted00ZCDNw+K5q35rXQ2ns2uJa+QXjlAGXlTb9Tj3g0++3nwSz4Q8b9+W75uCMEx3YvmkDUcbciBVaVpdxnx00=

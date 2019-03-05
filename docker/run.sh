@@ -39,5 +39,6 @@ ts_ec=$(docker inspect testsuite -f '{{.State.ExitCode}}')
 
 # Stop
 docker-compose down
+docker network rm example
 
 exit ${ts_ec}

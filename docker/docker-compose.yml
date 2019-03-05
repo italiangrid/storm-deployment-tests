@@ -1,12 +1,11 @@
-version: '2.1'
+version: '3'
 
 volumes:
   trustanchors:
-  cabundle:
 
 networks:
-  default:
-    name: example
+  example:
+    external: true
 
 services:
 
@@ -17,7 +16,6 @@ services:
       - FORCE_TRUST_ANCHORS_UPDATE=1
     volumes:
       - trustanchors:/etc/grid-security/certificates
-      - cabundle:/etc/pki
 
   redis-server:
     container_name: redis
@@ -25,7 +23,7 @@ services:
     hostname: redis-server.example
     image: redis:latest
     networks:
-      default:
+      example:
         aliases:
           - redis-server.example
 
@@ -40,12 +38,12 @@ services:
       - redis-server
       - storm
     environment:
-      - MODE
+      - MODE=clean
+      - REDIS_HOSTNAME=redis-server.example
+      - PLATFORM=centos6
       - CDMI_CLIENT_SECRET
-    env_file:
-      - cdmi-storm.env
     networks:
-      default:
+      example:
         aliases:
           - cdmi-storm.example
 
@@ -57,19 +55,20 @@ services:
     dns_search: example
     hostname: storm-testsuite.example
     environment:
+      - TESTSUITE_BRANCH=nightly
+      - TESTSUITE_EXCLUDE=to-be-fixedORno-btrfs
+      - TESTSUITE_SUITE=tests
+      - VOMS_FAKE=false
       - CDMI_CLIENT_SECRET
       - IAM_USER_PASSWORD
-    env_file:
-      - storm-testsuite.env
     depends_on:
       - storm
       - cdmi-storm
       - trust
     volumes:
-      - cabundle:/etc/pki
       - trustanchors:/etc/grid-security/certificates
     networks:
-      default:
+      example:
         aliases:
           - storm-testsuite.example
 
@@ -84,9 +83,8 @@ services:
     entrypoint: /bin/bash deploy.sh
     environment:
       - UPGRADE_FROM
-      - TARGET_RELEASE
-    env_file:
-      - storm-deployment.env
+      - TARGET_RELEASE=stable
+      - UMD_RELEASE_RPM=http://repository.egi.eu/sw/production/umd/4/sl6/x86_64/updates/umd-release-4.1.3-1.el6.noarch.rpm
     ports:
       - 8080:8080
       - 8085:8085
@@ -97,9 +95,8 @@ services:
     depends_on:
       - trust
     volumes:
-      - cabundle:/etc/pki
       - trustanchors:/etc/grid-security/certificates
     networks:
-      default:
+      example:
         aliases:
           - storm.example
