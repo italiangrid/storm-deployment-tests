@@ -3,8 +3,8 @@ FROM centos:7
 RUN yum update -y
 RUN yum install -y wget
 
-RUN rpm --import http://repo.indigo-datacloud.eu/repository/RPM-GPG-KEY-indigodc
-RUN wget http://repo.indigo-datacloud.eu/repository/indigo/2/centos7/x86_64/base/indigodc-release-2.0.0-1.el7.centos.noarch.rpm
+RUN rpm --import https://repo.indigo-datacloud.eu/repository/RPM-GPG-KEY-indigodc
+RUN wget https://repo.indigo-datacloud.eu/repository/indigo/2/centos7/x86_64/base/indigodc-release-2.0.0-1.el7.centos.noarch.rpm
 RUN yum localinstall -y indigodc-release-2.0.0-1.el7.centos.noarch.rpm
 RUN yum-config-manager --disable INDIGO-2-base
 
