@@ -9,7 +9,7 @@ RUN yum localinstall -y indigodc-release-2.0.0-1.el7.centos.noarch.rpm
 RUN yum-config-manager --disable INDIGO-2-base
 
 #RUN yum install -y cdmi-server
-RUN wget https://ci.cloud.cnaf.infn.it/job/CDMI/job/master/lastSuccessfulBuild/artifact/cdmi-server-1.2.1-1.el7.centos.x86_64.rpm
-RUN yum localinstall -y cdmi-server-1.2.1-1.el7.centos.x86_64.rpm
+RUN wget https://ci.cloud.cnaf.infn.it/job/CDMI/job/master/lastSuccessfulBuild/artifact/cdmi-server-1.2.1-1.el7.x86_64.rpm
+RUN yum localinstall -y cdmi-server-1.2.1-1.el7.x86_64.rpm
 
 EXPOSE 8888
