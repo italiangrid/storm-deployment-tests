@@ -38,6 +38,8 @@ if [[ ( $? -eq 4 ) || ( $? -eq 6 ) ]]; then
   exit 1
 fi
 
+yum update -y
+
 # install utilities
 yum install -y fetch-crl nc
 
