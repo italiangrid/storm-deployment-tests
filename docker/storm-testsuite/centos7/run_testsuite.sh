@@ -4,7 +4,7 @@ set -x
 # Optional parameters
 TESTSUITE="${TESTSUITE:-git://github.com/italiangrid/storm-testsuite.git}"
 TESTSUITE_BRANCH="${TESTSUITE_BRANCH:-develop}"
-VOMS_FAKE="${VOMS_FAKE:-true}"
+VOMS_FAKE="${VOMS_FAKE:-false}"
 
 STORM_BE_SYNC_PORT="${STORM_BE_SYNC_PORT:-8444}"
 STORM_BE_HOST="${STORM_BE_HOST:-storm.example}"

@@ -11,7 +11,10 @@ rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY*
 yum --enablerepo=extras install epel-release -y
 
 # install utils
-yum install -y redhat-lsb hostname git wget tar
+yum install -y redhat-lsb hostname git wget tar jq
+
+# install davix
+yum install -y davix
 
 # install puppet
 rpm -ivh https://yum.puppetlabs.com/puppetlabs-release-el-7.noarch.rpm
@@ -27,6 +30,10 @@ git clone git://github.com/cnaf/ci-puppet-modules.git /ci-puppet-modules
 # exit code '4' means there were failures during the transaction
 # exit code '6' means there were both changes and failures
 puppet apply --modulepath=/ci-puppet-modules/modules:/etc/puppet/modules/ --detailed-exitcodes /manifest.pp
+
+# install python enum
+wget https://files.pythonhosted.org/packages/c5/db/e56e6b4bbac7c4a06de1c50de6fe1ef3810018ae11732a50f15f62c7d050/enum34-1.1.6-py2-none-any.whl
+pip install enum34-1.1.6-py2-none-any.whl
 
 # install StoRM stable repo EL7
 yum-config-manager --add-repo https://repo.cloud.cnaf.infn.it/repository/storm/stable/storm-stable-centos7.repo

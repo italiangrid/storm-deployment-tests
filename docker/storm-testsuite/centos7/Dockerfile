@@ -8,9 +8,14 @@ RUN chmod +x /setup.sh
 RUN sh /setup.sh
 
 RUN adduser -d /home/tester tester
+
 COPY run_testsuite.sh /home/tester
 RUN chmod +x /home/tester/run_testsuite.sh
 RUN chown tester:tester /home/tester/run_testsuite.sh
+
+COPY fixture.sh /home/tester
+RUN chmod +x /home/tester/fixture.sh
+RUN chown tester:tester /home/tester/fixture.sh
 
 RUN mkdir /home/tester/voms-fake
 COPY voms_example.cert.pem /home/tester/voms-fake/
