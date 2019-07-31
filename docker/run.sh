@@ -17,7 +17,7 @@ mkdir -p ${outputDir}/etc/sysconfig
 # Stop if compose is running
 docker-compose ${COMPOSE_OPTS} down
 # Pull images from dockerhub
-docker-compose ${COMPOSE_OPTS} pull
+#docker-compose ${COMPOSE_OPTS} pull
 
 # Deployemnt test
 
