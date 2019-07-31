@@ -2,6 +2,9 @@
 set -ex
 trap "exit 1" TERM
 
+echo "UPGRADE_FROM = ${UPGRADE_FROM}"
+echo "TARGET_RELEASE = ${TARGET_RELEASE}"
+
 if [ -z ${TARGET_RELEASE+x} ]; then
     echo "TARGET_RELEASE is unset - 'nightly' will be used as target";
     TARGET_RELEASE="nightly"
