@@ -17,6 +17,7 @@ pipeline {
   environment {
     TARGET_RELEASE = "${params.TARGET_RELEASE}"
     UPGRADE_FROM = "${params.UPGRADE_FROM}"
+    COMPOSE_PROJECT_NAME = "storm-deployment-test-${BUILD_TAG}"
   }
 
   stages {
