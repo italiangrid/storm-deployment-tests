@@ -15,7 +15,7 @@ mkdir -p ${outputDir}/etc
 mkdir -p ${outputDir}/etc/sysconfig
 
 # Stop if compose is running
-docker-compose ${COMPOSE_OPTS} down
+#docker-compose ${COMPOSE_OPTS} down
 # Pull images from dockerhub
 #docker-compose ${COMPOSE_OPTS} pull
 
@@ -45,6 +45,6 @@ docker cp storm:/etc/sysconfig/storm-webdav ${outputDir}/etc/sysconfig
 ts_ec=$(docker inspect testsuite -f '{{.State.ExitCode}}')
 
 set -e
-docker-compose ${COMPOSE_OPTS} down
+docker-compose ${COMPOSE_OPTS} rm -f -s storm trust redis-server cdmi-storm storm-testsuite
 
 exit ${ts_ec}
