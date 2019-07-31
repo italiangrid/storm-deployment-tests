@@ -3,9 +3,6 @@ version: '3'
 volumes:
   trustanchors:
 
-networks:
-  example:
-
 services:
 
   trust:
@@ -22,7 +19,7 @@ services:
     hostname: redis-server.example
     image: redis:latest
     networks:
-      example:
+      default:
         aliases:
           - redis-server.example
 
@@ -42,7 +39,7 @@ services:
       - PLATFORM=centos6
       - CDMI_CLIENT_SECRET
     networks:
-      example:
+      default:
         aliases:
           - cdmi-storm.example
 
@@ -67,7 +64,7 @@ services:
     volumes:
       - trustanchors:/etc/grid-security/certificates
     networks:
-      example:
+      default:
         aliases:
           - storm-testsuite.example
 
@@ -96,6 +93,6 @@ services:
     volumes:
       - trustanchors:/etc/grid-security/certificates
     networks:
-      example:
+      default:
         aliases:
           - storm.example

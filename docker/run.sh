@@ -22,7 +22,7 @@ docker-compose ${COMPOSE_OPTS} pull
 # Deployemnt test
 
 docker-compose ${COMPOSE_OPTS} up --no-color -d storm
-docker-compose ${COMPOSE_OPTS} logs --no-color -f cdmi-storm redis-server trust storm &
+docker-compose ${COMPOSE_OPTS} logs --no-color -f storm &
 
 set +e
 docker-compose ${COMPOSE_OPTS} up --no-color storm-testsuite
