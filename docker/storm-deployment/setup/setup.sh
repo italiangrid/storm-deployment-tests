@@ -11,7 +11,7 @@ git clone git://github.com/cnaf/ci-puppet-modules.git /ci-puppet-modules
 # exit code '2' means there were changes
 # exit code '4' means there were failures during the transaction
 # exit code '6' means there were both changes and failures
-puppet apply --modulepath=/ci-puppet-modules/modules:/etc/puppet/modules/ --detailed-exitcodes /manifest.pp
+puppet apply --modulepath=/ci-puppet-modules/modules:/etc/puppet/modules/ --detailed-exitcodes /setup/manifest.pp
 
 # check if errors occurred after puppet apply:
 if [[ ( $? -eq 4 ) || ( $? -eq 6 ) ]]; then
@@ -19,19 +19,4 @@ if [[ ( $? -eq 4 ) || ( $? -eq 6 ) ]]; then
 fi
 
 # install acl and extended attributes support
-yum install -y attr acl fetch-crl
-
-# run fetch-crl
-fetch-crl
-
-# check if errors occurred after fetch-crl execution
-if [ $? != 0 ]; then
-  exit 1
-fi
-
-# install host certificate
-cp /storm-certificates/storm-example-cert.pem /etc/grid-security/hostcert.pem
-cp /storm-certificates/storm-example-key.pem /etc/grid-security/hostkey.pem
-chmod 400 /etc/grid-security/hostkey.pem
-chmod 644 /etc/grid-security/hostcert.pem
-service rsyslog start
+yum install -y attr acl 

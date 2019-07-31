@@ -76,11 +76,10 @@ services:
     container_name: storm
     dns_search: example
     hostname: storm.example
-    entrypoint: /bin/bash deploy.sh
+    entrypoint: /bin/bash /assets/deploy.sh
     environment:
       - UPGRADE_FROM
       - TARGET_RELEASE=stable
-      - UMD_RELEASE_RPM=http://repository.egi.eu/sw/production/umd/4/sl6/x86_64/updates/umd-release-4.1.3-1.el6.noarch.rpm
     ports:
       - 8080:8080
       - 8085:8085
@@ -92,6 +91,8 @@ services:
       - trust
     volumes:
       - trustanchors:/etc/grid-security/certificates
+      - ./storm-deployment/assets:/assets
+
     networks:
       default:
         aliases:
