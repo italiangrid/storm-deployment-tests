@@ -83,7 +83,7 @@ services:
     entrypoint: /bin/bash /assets/deploy.sh
     environment:
       - UPGRADE_FROM
-      - TARGET_RELEASE=stable
+      - TARGET_RELEASE
     ports:
       - 8080:8080
       - 8085:8085
