@@ -3,7 +3,7 @@ set -x
 
 # Optional parameters
 TESTSUITE="${TESTSUITE:-git://github.com/italiangrid/storm-testsuite.git}"
-TESTSUITE_BRANCH="${TESTSUITE_BRANCH:-nightly}"
+TESTSUITE_BRANCH="${TESTSUITE_BRANCH:-develop}"
 VOMS_FAKE="${VOMS_FAKE:-true}"
 
 STORM_BE_SYNC_PORT="${STORM_BE_SYNC_PORT:-8444}"
@@ -67,6 +67,8 @@ if [ $attempts -gt $MAX_RETRIES ]; then
     echo "Timeout!"
     exit 1
 fi
+
+cd /home/tester/
 
 if [ -d "storm-testsuite" ]; then
   cd storm-testsuite

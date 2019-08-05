@@ -48,12 +48,13 @@ services:
           - cdmi-storm.example
 
   storm-testsuite:
-    image: italiangrid/storm-testsuite:centos7
+    image: italiangrid/storm-testsuite
     build:
-      context: ./storm-testsuite/centos7
+      context: ./storm-testsuite
     container_name: testsuite
     dns_search: example
     hostname: storm-testsuite.example
+    entrypoint: /bin/bash /assets/run_testsuite.sh
     environment:
       - TESTSUITE_BRANCH=nightly
       - TESTSUITE_EXCLUDE=to-be-fixedORno-btrfs
@@ -67,6 +68,7 @@ services:
       - trust
     volumes:
       - trustanchors:/etc/grid-security/certificates
+      - ./storm-testsuite/assets:/assets
     networks:
       example:
         aliases:
