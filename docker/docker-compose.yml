@@ -56,10 +56,10 @@ services:
     hostname: storm-testsuite.example
     entrypoint: /bin/bash /assets/run_testsuite.sh
     environment:
-      - TESTSUITE_BRANCH=nightly
-      - TESTSUITE_EXCLUDE=to-be-fixedORno-btrfs
-      - TESTSUITE_SUITE=tests
-      - VOMS_FAKE=false
+      - TESTSUITE_BRANCH
+      - TESTSUITE_EXCLUDE
+      - TESTSUITE_SUITE
+      - VOMS_FAKE
       - CDMI_CLIENT_SECRET
       - IAM_USER_PASSWORD
     depends_on:
