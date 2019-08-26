@@ -19,8 +19,8 @@ mkdir -p ${outputDir}/etc/sysconfig
 # Pull images from dockerhub
 #docker-compose ${COMPOSE_OPTS} pull
 
-# Deployemnt test
-
+# Deployment test
+docker-compose down
 docker-compose ${COMPOSE_OPTS} up --no-color -d storm
 docker-compose ${COMPOSE_OPTS} logs --no-color -f storm &
 
