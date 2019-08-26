@@ -3,6 +3,7 @@
 gpg --import /etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
 
 yum clean all
+yum update -y
 
 # install GPG keys
 rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY*
@@ -31,32 +32,22 @@ git clone git://github.com/cnaf/ci-puppet-modules.git /ci-puppet-modules
 # exit code '6' means there were both changes and failures
 puppet apply --modulepath=/ci-puppet-modules/modules:/etc/puppet/modules/ --detailed-exitcodes /manifest.pp
 
-# install python enum
+# check if errors occurred after puppet apply:
+if [[ ( $? -eq 4 ) || ( $? -eq 6 ) ]]; then
+  exit 1
+fi
+
+# install python enum (needed by new storm-webdav testsuite)
 wget https://files.pythonhosted.org/packages/c5/db/e56e6b4bbac7c4a06de1c50de6fe1ef3810018ae11732a50f15f62c7d050/enum34-1.1.6-py2-none-any.whl
 pip install enum34-1.1.6-py2-none-any.whl
 
 # install StoRM stable repo EL7
 yum-config-manager --add-repo https://repo.cloud.cnaf.infn.it/repository/storm/stable/storm-stable-centos7.repo
 
-yum install -y storm-srm-client
-
-# check if errors occurred after puppet apply:
-if [[ ( $? -eq 4 ) || ( $? -eq 6 ) ]]; then
-  exit 1
-fi
-
-yum update -y
+yum install -y storm-srm-client davix
 
 # install utilities
-yum install -y fetch-crl nc
-
-# run fetch-crl
-fetch-crl
-
-# check if errors occurred after fetch-crl execution
-if [ $? != 0 ]; then
-  exit 1
-fi
+yum install -y nc
 
 pip install --upgrade robotframework-httplibrary
 
@@ -66,3 +57,17 @@ yum install -y myproxy
 yum localinstall -y https://ci.cloud.cnaf.infn.it/view/voms/job/pkg.voms/job/release_dec_17/lastSuccessfulBuild/artifact/repo/centos6/voms-clients3-3.3.1-0.el6.centos.noarch.rpm
 
 echo 'export X509_USER_PROXY="/tmp/x509up_u$(id -u)"'>/etc/profile.d/x509_user_proxy.sh
+
+# Add tester user
+adduser -d /home/tester tester
+
+# .globus
+mkdir /home/tester/.globus
+chown tester:tester /home/tester/.globus
+
+# setup voms-fake
+mkdir /home/tester/voms-fake
+cp -R /setup/voms-fake /home/tester
+chown tester:tester /home/tester/voms-fake/*.pem
+chmod 644 /home/tester/voms-fake/voms_example.cert.pem
+chmod 400 /home/tester/voms-fake/voms_example.key.pem

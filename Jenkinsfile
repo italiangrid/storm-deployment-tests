@@ -10,13 +10,16 @@ pipeline {
   }
 
   parameters {
-    choice(choices: '\nstable\nbeta\numd', name: 'UPGRADE_FROM', description: '')
-    choice(choices: 'nightly\nbeta\nstable\numd', name: 'TARGET_RELEASE', description: '')
+    choice(choices: '\nstable\nbeta\numd', name: 'UPGRADE_FROM', description: 'Optional. Install this packages before if you want to test an update deployment. Leave empty for a clean deployment.')
+    choice(choices: 'nightly\nbeta\nstable\numd', name: 'TARGET_RELEASE', description: 'Realese that need to be tested.')
+    choice(choices: 'nightly\nv1.11.15', name: 'TESTSUITE_BRANCH', description: 'Testsuite branch.')
   }
 
   environment {
     TARGET_RELEASE = "${params.TARGET_RELEASE}"
     UPGRADE_FROM = "${params.UPGRADE_FROM}"
+    TESTSUITE_BRANCH = "${params.TESTSUITE_BRANCH}"
+    COMPOSE_PROJECT_NAME = "storm-deployment-test-${BUILD_TAG}"
   }
 
   stages {
@@ -29,6 +32,7 @@ pipeline {
           ]) {
             echo "UPGRADE_FROM=${env.UPGRADE_FROM}"
             echo "TARGET_RELEASE=${env.TARGET_RELEASE}"
+            echo "TESTSUITE_BRANCH=${env.TESTSUITE_BRANCH}"
             dir("docker") {
               sh "bash ./run.sh"
             }
@@ -51,12 +55,12 @@ pipeline {
         unstableThreshold: 90])
     }
     failure {
-      slackSend color: 'danger', message: "${env.JOB_NAME} - #${env.BUILD_ID} Failure (<${env.BUILD_URL}|Open>)"
+      slackSend channel: '#ci-deployment-tests', color: 'danger', message: "${env.JOB_NAME} - #${env.BUILD_ID} Failure (<${env.BUILD_URL}|Open>)"
     }
     changed {
       script {
         if ('SUCCESS'.equals(currentBuild.result)) {
-          slackSend color: 'good', message: "${env.JOB_NAME} - #${env.BUILD_ID} Back to normal (<${env.BUILD_URL}|Open>)"
+          slackSend channel: '#ci-deployment-tests', color: 'good', message: "${env.JOB_NAME} - #${env.BUILD_ID} Back to normal (<${env.BUILD_URL}|Open>)"
         }
       }
     }

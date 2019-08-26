@@ -1,11 +1,11 @@
-version: '3'
+version: '3.5'
 
 volumes:
   trustanchors:
 
 networks:
   example:
-    external: true
+    name: example
 
 services:
 
@@ -48,17 +48,18 @@ services:
           - cdmi-storm.example
 
   storm-testsuite:
-    image: italiangrid/storm-testsuite:centos7
+    image: italiangrid/storm-testsuite
     build:
-      context: ./storm-testsuite/centos7
+      context: ./storm-testsuite
     container_name: testsuite
     dns_search: example
     hostname: storm-testsuite.example
+    entrypoint: /bin/bash /assets/run_testsuite.sh
     environment:
-      - TESTSUITE_BRANCH=nightly
-      - TESTSUITE_EXCLUDE=to-be-fixedORno-btrfs
-      - TESTSUITE_SUITE=tests
-      - VOMS_FAKE=false
+      - TESTSUITE_BRANCH
+      - TESTSUITE_EXCLUDE
+      - TESTSUITE_SUITE
+      - VOMS_FAKE
       - CDMI_CLIENT_SECRET
       - IAM_USER_PASSWORD
     depends_on:
@@ -67,6 +68,7 @@ services:
       - trust
     volumes:
       - trustanchors:/etc/grid-security/certificates
+      - ./storm-testsuite/assets:/assets
     networks:
       example:
         aliases:
@@ -80,11 +82,10 @@ services:
     container_name: storm
     dns_search: example
     hostname: storm.example
-    entrypoint: /bin/bash deploy.sh
+    entrypoint: /bin/bash /assets/deploy.sh
     environment:
       - UPGRADE_FROM
-      - TARGET_RELEASE=stable
-      - UMD_RELEASE_RPM=http://repository.egi.eu/sw/production/umd/4/sl6/x86_64/updates/umd-release-4.1.3-1.el6.noarch.rpm
+      - TARGET_RELEASE
     ports:
       - 8080:8080
       - 8085:8085
@@ -96,6 +97,8 @@ services:
       - trust
     volumes:
       - trustanchors:/etc/grid-security/certificates
+      - ./storm-deployment/assets:/assets
+
     networks:
       example:
         aliases:
