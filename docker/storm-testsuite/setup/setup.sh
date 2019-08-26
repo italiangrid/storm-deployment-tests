@@ -30,7 +30,7 @@ git clone git://github.com/cnaf/ci-puppet-modules.git /ci-puppet-modules
 # exit code '2' means there were changes
 # exit code '4' means there were failures during the transaction
 # exit code '6' means there were both changes and failures
-puppet apply --modulepath=/ci-puppet-modules/modules:/etc/puppet/modules/ --detailed-exitcodes /manifest.pp
+puppet apply --modulepath=/ci-puppet-modules/modules:/etc/puppet/modules/ --detailed-exitcodes /setup/manifest.pp
 
 # check if errors occurred after puppet apply:
 if [[ ( $? -eq 4 ) || ( $? -eq 6 ) ]]; then
