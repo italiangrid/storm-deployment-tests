@@ -37,10 +37,6 @@ if [[ ( $? -eq 4 ) || ( $? -eq 6 ) ]]; then
   exit 1
 fi
 
-# install python enum (needed by new storm-webdav testsuite)
-wget https://files.pythonhosted.org/packages/c5/db/e56e6b4bbac7c4a06de1c50de6fe1ef3810018ae11732a50f15f62c7d050/enum34-1.1.6-py2-none-any.whl
-pip install enum34-1.1.6-py2-none-any.whl
-
 # install StoRM stable repo EL7
 yum-config-manager --add-repo https://repo.cloud.cnaf.infn.it/repository/storm/stable/storm-stable-centos7.repo
 
