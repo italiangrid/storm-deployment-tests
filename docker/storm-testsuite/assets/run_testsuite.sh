@@ -3,7 +3,10 @@ set -x
 
 # Optional parameters
 TESTSUITE="${TESTSUITE:-git://github.com/italiangrid/storm-testsuite.git}"
-TESTSUITE_BRANCH="${TESTSUITE_BRANCH:-develop}"
+TESTSUITE_BRANCH="${TESTSUITE_BRANCH:-nightly}"
+TESTSUITE_EXCLUDE="${TESTSUITE_EXCLUDE:-to-be-fixed}"
+TESTSUITE_SUITE="${TESTSUITE_SUITE:-tests}"
+
 VOMS_FAKE="${VOMS_FAKE:-false}"
 
 STORM_BE_SYNC_PORT="${STORM_BE_SYNC_PORT:-8444}"
@@ -18,7 +21,9 @@ STORM_STORAGE_ROOT_DIR="${STORM_STORAGE_ROOT_DIR:-/storage}"
 CDMI_ADMIN_USERNAME=${CDMI_ADMIN_USERNAME:-restadmin}
 CDMI_ADMIN_PASSWORD=${CDMI_ADMIN_PASSWORD:-restadmin}
 
-TESTSUITE_SUITE="${TESTSUITE_SUITE:-tests}"
+DAV_HOST=${DAV_HOST:-storm-alias.example}
+GFTP_HOST=${GFTP_HOST:-storm-alias.example}
+GFTP_PORT=${GFTP_PORT:-2811}
 
 # Mandatory parameters
 if [ -z ${CDMI_CLIENT_SECRET+x} ]; then
@@ -39,6 +44,8 @@ VARIABLES="$VARIABLES --variable cdmiClientSecret:$CDMI_CLIENT_SECRET"
 VARIABLES="$VARIABLES --variable iamUserPassword:$IAM_USER_PASSWORD"
 VARIABLES="$VARIABLES --variable vomsFake:$VOMS_FAKE"
 VARIABLES="$VARIABLES --variable storageAreaRoot:$STORM_STORAGE_ROOT_DIR"
+VARIABLES="$VARIABLES --variable DAVHost:$DAV_HOST"
+VARIABLES="$VARIABLES --variable globusEndpoint:$GFTP_HOST:$GFTP_PORT"
 
 # Build exclude clause
 if [ -z "$TESTSUITE_EXCLUDE" ]; then
@@ -48,25 +55,11 @@ else
 fi
 
 # Wait for StoRM services
-MAX_RETRIES=600
-attempts=1
+WAIT_TIMEOUT=${WAIT_TIMEOUT:-600}
 
-CMD="nc -z ${STORM_BE_HOST} ${STORM_BE_SYNC_PORT}"
-
-echo "Waiting for StoRM services... "
-$CMD
-
-while [ $? -eq 1 ] && [ $attempts -le  $MAX_RETRIES ];
-do
-  sleep 5
-  let attempts=attempts+1
-  $CMD
-done
-
-if [ $attempts -gt $MAX_RETRIES ]; then
-    echo "Timeout!"
-    exit 1
-fi
+chmod +x /assets/scripts/wait-for-it.sh
+/assets/scripts/wait-for-it.sh ${DAV_HOST}:8085 --timeout=${WAIT_TIMEOUT}
+/assets/scripts/wait-for-it.sh ${STORM_BE_HOST}:8444 --timeout=${WAIT_TIMEOUT}
 
 cd /home/tester/
 

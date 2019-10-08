@@ -21,6 +21,8 @@ docker-compose ${COMPOSE_OPTS} pull
 
 # Deployment test
 docker-compose ${COMPOSE_OPTS} up --no-color -d storm
+docker-compose ${COMPOSE_OPTS} up --no-color -d tfnode
+docker-compose exec tfnode sh /assets/configure.sh
 docker-compose ${COMPOSE_OPTS} logs --no-color -f storm &
 
 set +e
@@ -33,17 +35,20 @@ docker-compose ${COMPOSE_OPTS} logs --no-color trust >${outputDir}/compose-logs/
 docker-compose ${COMPOSE_OPTS} logs --no-color cdmi-storm >${outputDir}/compose-logs/cdmi-storm.log
 docker-compose ${COMPOSE_OPTS} logs --no-color redis-server >${outputDir}/compose-logs/redis-server.log
 docker-compose ${COMPOSE_OPTS} logs --no-color storm >${outputDir}/compose-logs/storm.log
+docker-compose ${COMPOSE_OPTS} logs --no-color tfnode >${outputDir}/compose-logs/tfnode.log
 docker-compose ${COMPOSE_OPTS} logs --no-color storm-testsuite >${outputDir}/compose-logs/storm-testsuite.log
 
 docker cp testsuite:/home/tester/storm-testsuite/reports ${outputDir}
 docker cp storm:/var/log/storm ${outputDir}/var/log
+docker cp tfnode:/var/log/storm ${outputDir}/var/log
 docker cp storm:/etc/storm ${outputDir}/etc
-docker cp storm:/etc/sysconfig/storm-webdav ${outputDir}/etc/sysconfig
+docker cp tfnode:/etc/storm ${outputDir}/etc
+docker cp tfnode:/etc/sysconfig/storm-webdav ${outputDir}/etc/sysconfig
 
 # Exit Code
 ts_ec=$(docker inspect testsuite -f '{{.State.ExitCode}}')
 
 set -e
-docker-compose ${COMPOSE_OPTS} rm -f -s storm trust redis-server cdmi-storm storm-testsuite
+docker-compose ${COMPOSE_OPTS} rm -f -s storm trust redis-server cdmi-storm storm-testsuite tfnode
 
 exit ${ts_ec}

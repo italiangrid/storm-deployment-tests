@@ -11,7 +11,8 @@ if [ -z ${TARGET_RELEASE+x} ]; then
 fi
 
 # add storm user
-adduser -r storm
+groupadd -g 1100 storm
+useradd -u 1100 -g 1100 storm
 
 # install UMD repositories
 sh ./install-umd-repos.sh

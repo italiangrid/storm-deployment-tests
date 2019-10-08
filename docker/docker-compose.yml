@@ -2,6 +2,8 @@ version: '3.5'
 
 volumes:
   trustanchors:
+  storage:
+  gridmapdir:
 
 networks:
   example:
@@ -54,7 +56,7 @@ services:
     container_name: testsuite
     dns_search: example
     hostname: storm-testsuite.example
-    entrypoint: /bin/bash /assets/run_testsuite.sh
+    entrypoint: sh /assets/run_testsuite.sh
     environment:
       - TESTSUITE_BRANCH
       - TESTSUITE_EXCLUDE
@@ -62,10 +64,13 @@ services:
       - VOMS_FAKE
       - CDMI_CLIENT_SECRET
       - IAM_USER_PASSWORD
+      - DAV_HOST
+      - SRM_HOST
     depends_on:
       - storm
       - cdmi-storm
       - trust
+      - tfnode
     volumes:
       - trustanchors:/etc/grid-security/certificates
       - ./storm-testsuite/assets:/assets
@@ -88,8 +93,6 @@ services:
       - TARGET_RELEASE
     ports:
       - 8080:8080
-      - 8085:8085
-      - 8443:8443
       - 8444:8444
       - 9998:9998
       - 2710:2710
@@ -98,8 +101,34 @@ services:
     volumes:
       - trustanchors:/etc/grid-security/certificates
       - ./storm-deployment/assets:/assets
-
+      - storage:/storage
+      - gridmapdir:/etc/grid-security/gridmapdir
     networks:
       example:
         aliases:
           - storm.example
+
+  tfnode:
+    image: italiangrid/storm-tfnode
+    build:
+      context: ./tf-node
+    container_name: tfnode
+    dns_search: example
+    hostname: storm-alias.example
+    ports:
+      - 8085:8085
+      - 8443:8443
+      - 2811:2811
+    depends_on:
+      - trust
+    volumes:
+      - trustanchors:/etc/grid-security/certificates
+      - ./tf-node/assets:/assets
+      - storage:/storage
+      - gridmapdir:/etc/grid-security/gridmapdir
+    cap_add:
+      - SYS_ADMIN
+    networks:
+      example:
+        aliases:
+          - storm-alias.example
