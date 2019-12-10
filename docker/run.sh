@@ -4,6 +4,7 @@ set -ex
 outputDir="./output"
 
 COMPOSE_OPTS="--no-ansi"
+TTY_OPTS="${TTY_OPTS:-}"
 
 # Clear output directory
 rm -rf ${outputDir}
@@ -22,7 +23,7 @@ docker-compose ${COMPOSE_OPTS} pull
 # Deployment test
 docker-compose ${COMPOSE_OPTS} up --no-color -d storm
 docker-compose ${COMPOSE_OPTS} up --no-color -d tfnode
-docker-compose exec tfnode sh -c "sh /assets/configure.sh"
+docker-compose exec ${TTY_OPTS} tfnode sh -c "sh /assets/configure.sh"
 docker-compose ${COMPOSE_OPTS} logs --no-color -f storm &
 
 set +e

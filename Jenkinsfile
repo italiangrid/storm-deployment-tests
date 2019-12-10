@@ -20,6 +20,7 @@ pipeline {
     UPGRADE_FROM = "${params.UPGRADE_FROM}"
     TESTSUITE_BRANCH = "${params.TESTSUITE_BRANCH}"
     COMPOSE_PROJECT_NAME = "storm-deployment-test-${BUILD_TAG}"
+    TTY_OPTS = "-T"
   }
 
   stages {
@@ -33,6 +34,7 @@ pipeline {
             echo "UPGRADE_FROM=${env.UPGRADE_FROM}"
             echo "TARGET_RELEASE=${env.TARGET_RELEASE}"
             echo "TESTSUITE_BRANCH=${env.TESTSUITE_BRANCH}"
+            echo "TTY_OPTS=${env.TTY_OPTS}"
             dir("docker") {
               sh "bash ./run.sh"
             }
