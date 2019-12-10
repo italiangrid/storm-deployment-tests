@@ -22,7 +22,7 @@ docker-compose ${COMPOSE_OPTS} pull
 # Deployment test
 docker-compose ${COMPOSE_OPTS} up --no-color -d storm
 docker-compose ${COMPOSE_OPTS} up --no-color -d tfnode
-docker-compose exec -T tfnode sh -c "sh /assets/configure.sh"
+docker-compose exec tfnode sh -c "sh /assets/configure.sh"
 docker-compose ${COMPOSE_OPTS} logs --no-color -f storm &
 
 set +e
