@@ -2,21 +2,17 @@ class { 'storm::repo':
   enabled => [],
   customs => [{
     name => 'storm-test-el7',
-    url  => 'https://ci.cloud.cnaf.infn.it/view/storm/job/pkg.storm/job/release-el7-1-11-17/lastSuccessfulBuild/artifact/rpms/storm-test-centos7.repo',
+    url  => 'https://ci.cloud.cnaf.infn.it/job/pkg.storm/job/release-el7-1-11-17/lastSuccessfulBuild/artifact/rpms/storm-test-centos7.repo',
   }],
 }
 
 class { 'storm::webdav':
-  oauth_issuers => [
-    {
-      name   => 'iam-virgo',
-      issuer => 'https://iam-virgo.cloud.cnaf.infn.it/',
-    },
-    {
-      name   => 'indigo-dc',
-      issuer => 'https://iam-test.indigo-datacloud.eu/',
-    },
-  ],
+  user_name     => 'storm',
+  user_uid      => 1100,
+  user_gid      => 1100,
+  use_conscrypt => true,
+  enable_http2  => true,
+  jvm_opts      => '-Xms256m -Xmx512m',
   storage_areas => [
     {
       'name'                       => 'test.vo',

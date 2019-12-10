@@ -5,5 +5,3 @@ RUN sh /setup/setup.sh
 
 USER tester
 WORKDIR /home/tester
-
-ENTRYPOINT [ "/bin/bash /assets/run_testsuite.sh" ]
