@@ -1,5 +1,7 @@
 #!/bin/bash
 
+echo "TARGET_RELEASE=${TARGET_RELEASE}"
+
 # Install storm puppet module
 git clone https://github.com/enricovianello/storm-puppet-module.git /storm-puppet-module
 cd /storm-puppet-module
@@ -13,6 +15,9 @@ mkdir -p /etc/storm
 cp -R /assets/siteinfo /etc/storm
 # run YAIM
 /opt/glite/yaim/bin/yaim -d 12 -c -s /etc/storm/siteinfo/storm.def -n se_storm_tfnode
+
+# Add the right enabled repository
+puppet apply /assets/repos/${TARGET_RELEASE}.pp
 
 # Install StoRM services
 puppet apply /assets/manifest.pp

@@ -50,9 +50,7 @@ services:
           - cdmi-storm.example
 
   storm-testsuite:
-    image: italiangrid/storm-testsuite
-    build:
-      context: ./storm-testsuite
+    image: italiangrid/storm-testsuite:${TESTSUITE_BRANCH}
     container_name: testsuite
     dns_search: example
     hostname: storm-testsuite.example
@@ -80,15 +78,13 @@ services:
           - storm-testsuite.example
 
   storm:
-    image: italiangrid/storm-deployment:centos6
-    build:
-      context: ./storm-deployment
-      dockerfile: Dockerfile.centos6
+    image: italiangrid/storm-deployment:${STORM_DEPLOYMENT_IMAGE_TAG}
     container_name: storm
     dns_search: example
     hostname: storm.example
     entrypoint: /bin/bash /assets/deploy.sh
     environment:
+      - STORM_DEPLOYMENT_IMAGE_TAG
       - UPGRADE_FROM
       - TARGET_RELEASE
     ports:

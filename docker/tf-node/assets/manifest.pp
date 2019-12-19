@@ -1,11 +1,3 @@
-class { 'storm::repo':
-  enabled => [],
-  customs => [{
-    name => 'storm-test-el7',
-    url  => 'https://ci.cloud.cnaf.infn.it/job/pkg.storm/job/release-el7-1-11-17/lastSuccessfulBuild/artifact/rpms/storm-test-centos7.repo',
-  }],
-}
-
 class { 'storm::webdav':
   user_name     => 'storm',
   user_uid      => 1100,

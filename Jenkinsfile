@@ -10,7 +10,7 @@ pipeline {
   }
 
   parameters {
-    choice(choices: 'nightly\nv1.11.15', name: 'TESTSUITE_BRANCH', description: 'Testsuite branch.')
+    choice(choices: 'nightly\nv1.11.17\nv1.11.16\nv1.11.15', name: 'TESTSUITE_BRANCH', description: 'Testsuite branch.')
   }
 
   environment {
