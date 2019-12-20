@@ -10,12 +10,14 @@ pipeline {
   }
 
   parameters {
+    choice(choices: '\nstable', name: 'UPGRADE_FROM', description: 'Upgrade from this repo.')
+    choice(choices: 'stable\nbeta\nnightly', name: 'TARGET_RELEASE', description: 'Target release to test.')
     choice(choices: 'nightly\nv1.11.17\nv1.11.16\nv1.11.15', name: 'TESTSUITE_BRANCH', description: 'Testsuite branch.')
   }
 
   environment {
-    TARGET_RELEASE = "beta"
-    UPGRADE_FROM = "stable"
+    UPGRADE_FROM = "${params.UPGRADE_FROM}"
+    TARGET_RELEASE = "${params.TARGET_RELEASE}"
     TESTSUITE_BRANCH = "${params.TESTSUITE_BRANCH}"
     COMPOSE_PROJECT_NAME = "storm-deployment-test-${BUILD_TAG}"
     TTY_OPTS = "-T"
