@@ -23,7 +23,7 @@ sh ./install-repo.sh ${STORM_REPO} storm-nightly
 
 # install
 yum clean all
-yum install -y emi-storm-backend-mp emi-storm-frontend-mp emi-storm-globus-gridftp-mp storm-webdav
+yum install -y emi-storm-backend-mp emi-storm-frontend-mp
 yum update -y
 
 fix_yaim
@@ -38,4 +38,4 @@ sed -i 's/sleep 2/sleep 5/' /etc/init.d/bdii
 sh ./post-install.sh
 
 # do yaim
-/opt/glite/yaim/bin/yaim -c -s /etc/storm/siteinfo/storm.def -n se_storm_backend -n se_storm_frontend -n se_storm_gridftp -n se_storm_webdav
+/opt/glite/yaim/bin/yaim -c -s /etc/storm/siteinfo/storm.def -n se_storm_backend -n se_storm_frontend

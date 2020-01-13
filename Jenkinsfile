@@ -10,16 +10,17 @@ pipeline {
   }
 
   parameters {
-    choice(choices: '\nstable\nbeta\numd', name: 'UPGRADE_FROM', description: 'Optional. Install this packages before if you want to test an update deployment. Leave empty for a clean deployment.')
-    choice(choices: 'nightly\nbeta\nstable\numd', name: 'TARGET_RELEASE', description: 'Realese that need to be tested.')
-    choice(choices: 'nightly\nv1.11.15', name: 'TESTSUITE_BRANCH', description: 'Testsuite branch.')
+    choice(choices: '\nstable', name: 'UPGRADE_FROM', description: 'Upgrade from this repo.')
+    choice(choices: 'stable\nbeta\nnightly', name: 'TARGET_RELEASE', description: 'Target release to test.')
+    choice(choices: 'nightly\nv1.11.17\nv1.11.16\nv1.11.15', name: 'TESTSUITE_BRANCH', description: 'Testsuite branch.')
   }
 
   environment {
-    TARGET_RELEASE = "${params.TARGET_RELEASE}"
     UPGRADE_FROM = "${params.UPGRADE_FROM}"
+    TARGET_RELEASE = "${params.TARGET_RELEASE}"
     TESTSUITE_BRANCH = "${params.TESTSUITE_BRANCH}"
     COMPOSE_PROJECT_NAME = "storm-deployment-test-${BUILD_TAG}"
+    TTY_OPTS = "-T"
   }
 
   stages {
@@ -33,6 +34,7 @@ pipeline {
             echo "UPGRADE_FROM=${env.UPGRADE_FROM}"
             echo "TARGET_RELEASE=${env.TARGET_RELEASE}"
             echo "TESTSUITE_BRANCH=${env.TESTSUITE_BRANCH}"
+            echo "TTY_OPTS=${env.TTY_OPTS}"
             dir("docker") {
               sh "bash ./run.sh"
             }
