@@ -58,9 +58,7 @@ services:
           - cdmi-storm.cnaf.infn.it
 
   docker-storm-testsuite:
-    image: italiangrid/storm-testsuite
-    build:
-      context: ../docker/storm-testsuite
+    image: italiangrid/storm-testsuite:nightly
     container_name: docker-storm-testsuite
     dns_search: cnaf.infn.it
     hostname: docker-storm-testsuite.cnaf.infn.it
@@ -78,14 +76,11 @@ services:
           - docker-storm-testsuite.cnaf.infn.it
 
   docker-storm:
-    image: italiangrid/storm-deployment:centos6
-    build:
-      context: ../docker/storm-deployment
-      dockerfile: Dockerfile.centos6
+    image: italiangrid/storm-deployment:latest
     container_name: docker-storm
     dns_search: cnaf.infn.it
     hostname: docker-storm.cnaf.infn.it
-    entrypoint: /bin/bash deploy.sh
+    entrypoint: /bin/bash /assets/deploy.sh
     environment:
       - MODE
     env_file:
@@ -95,6 +90,7 @@ services:
     volumes:
       - gridmapdir:/etc/grid-security
       - storage:/storage
+      - ../docker/storm-deployment/assets:/assets
 
     networks:
       cnaf.infn.it:
