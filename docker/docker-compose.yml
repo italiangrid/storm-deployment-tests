@@ -6,8 +6,8 @@ volumes:
   gridmapdir:
 
 networks:
-  example:
-    name: example
+  test.example:
+    name: test.example
 
 services:
 
@@ -21,39 +21,39 @@ services:
 
   redis-server:
     container_name: redis
-    dns_search: example
-    hostname: redis-server.example
+    dns_search: test.example
+    hostname: redis-server.test.example
     image: redis:latest
     networks:
-      example:
+      test.example:
         aliases:
-          - redis-server.example
+          - redis-server.test.example
 
-  cdmi-storm:
+  cdmi:
     image: italiangrid/cdmi-storm
     build:
       context: ./cdmi-storm
     container_name: cdmi
-    dns_search: example
-    hostname: cdmi-storm.example
+    dns_search: test.example
+    hostname: cdmi.test.example
     depends_on:
       - redis-server
-      - storm
+      - backend
     environment:
       - MODE=clean
       - REDIS_HOSTNAME=redis-server.example
       - PLATFORM=centos6
       - CDMI_CLIENT_SECRET
     networks:
-      example:
+      test.example:
         aliases:
-          - cdmi-storm.example
+          - cdmi.test.example
 
-  storm-testsuite:
+  testsuite:
     image: italiangrid/storm-testsuite:${TESTSUITE_BRANCH}
     container_name: testsuite
-    dns_search: example
-    hostname: storm-testsuite.example
+    dns_search: test.example
+    hostname: testsuite.test.example
     entrypoint: sh /assets/run_testsuite.sh
     environment:
       - TESTSUITE_BRANCH
@@ -65,66 +65,114 @@ services:
       - DAV_HOST
       - SRM_HOST
     depends_on:
-      - storm
-      - cdmi-storm
+      - backend
+      - cdmi
       - trust
-      - tfnode
+      - webdav
+      - frontend
+      - gridftp
     volumes:
       - trustanchors:/etc/grid-security/certificates
-      - ./storm-testsuite/assets:/assets
+      - ./testsuite/assets:/assets
     networks:
-      example:
+      test.example:
         aliases:
-          - storm-testsuite.example
+          - testsuite.test.example
 
-  storm:
+  backend:
     image: italiangrid/storm-deployment:${STORM_DEPLOYMENT_IMAGE_TAG}
-    container_name: storm
-    dns_search: example
-    hostname: storm.example
-    entrypoint: /bin/bash /assets/deploy.sh
+    container_name: backend
+    dns_search: test.example
+    hostname: backend.test.example
+    entrypoint: sleep infinity
     environment:
       - STORM_DEPLOYMENT_IMAGE_TAG
       - UPGRADE_FROM
       - TARGET_RELEASE
     ports:
       - 8080:8080
-      - 8444:8444
       - 9998:9998
       - 2710:2710
     depends_on:
       - trust
     volumes:
       - trustanchors:/etc/grid-security/certificates
-      - ./storm-deployment/assets:/assets
+      - ./backend/assets:/assets
       - storage:/storage
       - gridmapdir:/etc/grid-security/gridmapdir
+    cap_add:
+      - SYS_ADMIN
+    privileged: true
     networks:
-      example:
+      test.example:
         aliases:
-          - storm.example
+          - backend.test.example
 
-  tfnode:
-    image: italiangrid/storm-tfnode
+  gridftp:
     build:
-      context: ./tf-node
-    container_name: tfnode
-    dns_search: example
-    hostname: storm-alias.example
+      context: ./systemd-node
+    container_name: gridftp
+    dns_search: test.example
+    hostname: gridftp.test.example
     ports:
-      - 8085:8085
-      - 8443:8443
       - 2811:2811
     depends_on:
       - trust
     volumes:
       - trustanchors:/etc/grid-security/certificates
-      - ./tf-node/assets:/assets
+      - ./systemd-node/assets:/node
+      - ./gridftp/assets:/assets
       - storage:/storage
       - gridmapdir:/etc/grid-security/gridmapdir
     cap_add:
       - SYS_ADMIN
     networks:
-      example:
+      test.example:
         aliases:
-          - storm-alias.example
+          - gridftp.test.example
+
+  frontend:
+    build:
+      context: ./systemd-node
+    container_name: frontend
+    dns_search: test.example
+    hostname: frontend.test.example
+    ports:
+      - 8444:8444
+    depends_on:
+      - trust
+    volumes:
+      - trustanchors:/etc/grid-security/certificates
+      - ./systemd-node/assets:/node
+      - ./frontend/assets:/assets
+      - gridmapdir:/etc/grid-security/gridmapdir
+    cap_add:
+      - SYS_ADMIN
+    networks:
+      test.example:
+        aliases:
+          - frontend.test.example
+
+  webdav:
+    build:
+      context: ./systemd-node
+    container_name: webdav
+    dns_search: test.example
+    hostname: webdav.test.example
+    ports:
+      - 8085:8085
+      - 8443:8443
+    depends_on:
+      - trust
+    volumes:
+      - trustanchors:/etc/grid-security/certificates
+      - ./systemd-node/assets:/node
+      - ./webdav/assets:/assets
+      - storage:/storage
+      - gridmapdir:/etc/grid-security/gridmapdir
+    cap_add:
+      - SYS_ADMIN
+    networks:
+      test.example:
+        aliases:
+          - webdav.test.example

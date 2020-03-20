@@ -1,0 +1,10 @@
+USERS_CONF=/etc/storm/siteinfo/storm-users.conf
+GROUPS_CONF=/etc/storm/siteinfo/storm-groups.conf
+VOS="test.vo test.vo.2"
+
+LCAS_DEBUG_LEVEL=5
+LCAS_LOG_LEVEL=5
+
+LCMAPS_DEBUG_LEVEL=5
+LCMAPS_LOG_FILE="/var/log/storm/lcmaps.log"
+LCMAPS_LOG_LEVEL=5

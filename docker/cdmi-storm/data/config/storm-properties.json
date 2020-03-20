@@ -1,6 +1,6 @@
 {
     "backend": {
-        "hostname": "storm.example",
+        "hostname": "backend.test.example",
         "port": 9998,
         "token": "NS4kYAZuR65XJCq"
     },

@@ -1,3 +1,0 @@
-USERS_CONF=/etc/storm/siteinfo/storm-users.conf
-GROUPS_CONF=/etc/storm/siteinfo/storm-groups.conf
-VOS="test.vo test.vo.2"
