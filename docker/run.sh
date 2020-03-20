@@ -3,9 +3,11 @@ set -ex
 
 outputDir="./output"
 
+PLATFORM=${PLATFORM:-centos7}
 TARGET_RELEASE=${TARGET_RELEASE:-nightly}
+COMPOSE_FILE="docker-compose-${PLATFORM}.yml"
 
-COMPOSE_OPTS="--no-ansi"
+COMPOSE_OPTS="--no-ansi -f ${COMPOSE_FILE}"
 TTY_OPTS="${TTY_OPTS:-}"
 
 # Clear output directory
@@ -21,9 +23,15 @@ mkdir -p ${outputDir}/etc/sysconfig
 { 
     docker-compose ${COMPOSE_OPTS} down
 } || {
-    docker stop testsuite cdmi webdav gridftp frontend backend redis-server trust
-    docker rm -f testsuite cdmi webdav gridftp frontend backend redis-server trust
-    docker-compose ${COMPOSE_OPTS} down
+
+    # Probably there are still active nodes
+    nodes=`docker network inspect test.example --format='{{range .Containers}}{{.Name}} {{end}}'`
+
+    { 
+        docker stop ${nodes}
+    } || {
+        docker-compose ${COMPOSE_OPTS} down
+    }
 }
 # Pull images from dockerhub
 docker-compose ${COMPOSE_OPTS} pull
