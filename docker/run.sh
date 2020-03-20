@@ -42,15 +42,15 @@ docker-compose ${COMPOSE_OPTS} up --no-color -d frontend
 docker-compose ${COMPOSE_OPTS} up --no-color -d gridftp
 docker-compose ${COMPOSE_OPTS} up --no-color -d webdav
 
-docker-compose exec ${TTY_OPTS} backend sh -c "TARGET_RELEASE=${TARGET_RELEASE} sh /assets/configure-node.sh"
-docker-compose exec ${TTY_OPTS} frontend sh -c "TARGET_RELEASE=${TARGET_RELEASE} sh /node/configure-node.sh"
-docker-compose exec ${TTY_OPTS} gridftp sh -c "TARGET_RELEASE=${TARGET_RELEASE} sh /node/configure-node.sh"
-docker-compose exec ${TTY_OPTS} webdav sh -c "TARGET_RELEASE=${TARGET_RELEASE} sh /node/configure-node.sh"
+docker-compose ${COMPOSE_OPTS} exec ${TTY_OPTS} backend sh -c "TARGET_RELEASE=${TARGET_RELEASE} sh /assets/configure-node.sh"
+docker-compose ${COMPOSE_OPTS} exec ${TTY_OPTS} frontend sh -c "TARGET_RELEASE=${TARGET_RELEASE} sh /node/configure-node.sh"
+docker-compose ${COMPOSE_OPTS} exec ${TTY_OPTS} gridftp sh -c "TARGET_RELEASE=${TARGET_RELEASE} sh /node/configure-node.sh"
+docker-compose ${COMPOSE_OPTS} exec ${TTY_OPTS} webdav sh -c "TARGET_RELEASE=${TARGET_RELEASE} sh /node/configure-node.sh"
 
-docker-compose exec ${TTY_OPTS} backend sh -c "sh /assets/configure-service.sh"
-docker-compose exec ${TTY_OPTS} frontend sh -c "sh /node/configure-service.sh"
-docker-compose exec ${TTY_OPTS} gridftp sh -c "sh /node/configure-service.sh"
-docker-compose exec ${TTY_OPTS} webdav sh -c "sh /node/configure-service.sh"
+docker-compose ${COMPOSE_OPTS} exec ${TTY_OPTS} backend sh -c "TARGET_RELEASE=${TARGET_RELEASE} sh /assets/configure-service.sh"
+docker-compose ${COMPOSE_OPTS} exec ${TTY_OPTS} frontend sh -c "TARGET_RELEASE=${TARGET_RELEASE} sh /node/configure-service.sh"
+docker-compose ${COMPOSE_OPTS} exec ${TTY_OPTS} gridftp sh -c "TARGET_RELEASE=${TARGET_RELEASE} sh /node/configure-service.sh"
+docker-compose ${COMPOSE_OPTS} exec ${TTY_OPTS} webdav sh -c "TARGET_RELEASE=${TARGET_RELEASE} sh /node/configure-service.sh"
 
 set +e
 docker-compose ${COMPOSE_OPTS} up --no-color testsuite
