@@ -11,7 +11,7 @@ pipeline {
 
   parameters {
     choice(choices: '\nstable', name: 'UPGRADE_FROM', description: 'Upgrade from this repo.')
-    choice(choices: 'stable\nbeta\nnightly', name: 'TARGET_RELEASE', description: 'Target release to test.')
+    choice(choices: 'nightly\nstable\nbeta', name: 'TARGET_RELEASE', description: 'Target release to test.')
     choice(choices: 'nightly\nv1.11.17\nv1.11.16\nv1.11.15', name: 'TESTSUITE_BRANCH', description: 'Testsuite branch.')
   }
 

@@ -29,6 +29,8 @@ mkdir -p ${outputDir}/etc/sysconfig
 
     { 
         docker stop ${nodes}
+        docker rm -f ${nodes}
+        docker-compose ${COMPOSE_OPTS} down
     } || {
         docker-compose ${COMPOSE_OPTS} down
     }
