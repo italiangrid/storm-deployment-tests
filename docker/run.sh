@@ -1,13 +1,34 @@
 #!/bin/bash
 set -ex
 
+stop_active_containers (network_name) {
+
+    # get active containers names
+    echo "getting active containers ... "
+    active_containers=`docker network inspect ${network_name} --format='{{range .Containers}}{{.Name}} {{end}}'`
+    echo "stopping ${active_containers} ..."
+    docker stop ${active_containers}
+    echo "active containers have been stopped."
+}
+
+delete_containers (containers) {
+
+    # delete containers
+    echo "deleting ${containers} ..."
+    docker rm -f ${containers}
+    echo "deleted."
+}
+
 outputDir="./output"
+
+ALL_CONTAINERS="testsuite cdmi webdav gridftp frontend backend redis-server trust"
 
 PLATFORM=${PLATFORM:-centos7}
 TARGET_RELEASE=${TARGET_RELEASE:-nightly}
-COMPOSE_FILE="docker-compose-${PLATFORM}.yml"
 
+COMPOSE_FILE="docker-compose-${PLATFORM}.yml"
 COMPOSE_OPTS="--no-ansi -f ${COMPOSE_FILE}"
+
 TTY_OPTS="${TTY_OPTS:-}"
 
 # Clear output directory
@@ -22,14 +43,13 @@ mkdir -p ${outputDir}/etc/sysconfig
 # Stop if compose is running
 { 
     docker-compose ${COMPOSE_OPTS} down
+
 } || {
 
-    # Probably there are still active nodes
-    nodes=`docker network inspect test.example --format='{{range .Containers}}{{.Name}} {{end}}'`
-
+    # Probably there are still active nodeS
     { 
-        docker stop ${nodes}
-        docker rm -f ${nodes}
+        stop_active_containers "test.example"
+        delete_containers ${ALL_CONTAINERS}
         docker-compose ${COMPOSE_OPTS} down
     } || {
         docker-compose ${COMPOSE_OPTS} down
@@ -88,8 +108,10 @@ docker cp frontend:/etc/sysconfig/storm-frontend-server ${outputDir}/etc/sysconf
 ts_ec=$(docker inspect testsuite -f '{{.State.ExitCode}}')
 
 # Stop all containers and remove them
-docker stop cdmi webdav gridftp frontend backend redis-server trust
-docker rm -f testsuite cdmi webdav gridftp frontend backend redis-server trust
+stop_active_containers "test.example"
+# Delete all containers
+delete_containers ${ALL_CONTAINERS}
+
 # Clear deployment and network
 docker-compose ${COMPOSE_OPTS} down
 
