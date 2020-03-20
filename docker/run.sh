@@ -18,7 +18,12 @@ mkdir -p ${outputDir}/etc
 mkdir -p ${outputDir}/etc/sysconfig
 
 # Stop if compose is running
-docker-compose ${COMPOSE_OPTS} down
+{ 
+    docker-compose ${COMPOSE_OPTS} down
+} || {
+    docker-compose ${COMPOSE_OPTS} rm -f -s testsuite cdmi webdav gridftp frontend backend redis-server trust
+    docker-compose ${COMPOSE_OPTS} down
+}
 # Pull images from dockerhub
 docker-compose ${COMPOSE_OPTS} pull
 
