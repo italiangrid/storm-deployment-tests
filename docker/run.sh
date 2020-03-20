@@ -1,8 +1,10 @@
 #!/bin/bash
 set -ex
 
-stop_active_containers (network_name) {
+stop_active_containers () {
 
+    # get params
+    network_name = $1
     # get active containers names
     echo "getting active containers ... "
     active_containers=`docker network inspect ${network_name} --format='{{range .Containers}}{{.Name}} {{end}}'`
@@ -11,8 +13,10 @@ stop_active_containers (network_name) {
     echo "active containers have been stopped."
 }
 
-delete_containers (containers) {
+delete_containers () {
 
+    # get params
+    containers = $1
     # delete containers
     echo "deleting ${containers} ..."
     docker rm -f ${containers}
