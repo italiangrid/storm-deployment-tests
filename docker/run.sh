@@ -21,8 +21,8 @@ mkdir -p ${outputDir}/etc/sysconfig
 { 
     docker-compose ${COMPOSE_OPTS} down
 } || {
-    docker-compose ${COMPOSE_OPTS} stop testsuite cdmi webdav gridftp frontend backend redis-server trust
-    docker-compose ${COMPOSE_OPTS} rm testsuite cdmi webdav gridftp frontend backend redis-server trust
+    docker ${COMPOSE_OPTS} stop testsuite cdmi webdav gridftp frontend backend redis-server trust
+    docker ${COMPOSE_OPTS} rm -f testsuite cdmi webdav gridftp frontend backend redis-server trust
     docker-compose ${COMPOSE_OPTS} down
 }
 # Pull images from dockerhub
@@ -78,8 +78,8 @@ docker cp frontend:/etc/sysconfig/storm-frontend-server ${outputDir}/etc/sysconf
 ts_ec=$(docker inspect testsuite -f '{{.State.ExitCode}}')
 
 # Stop all containers and remove them
-docker-compose ${COMPOSE_OPTS} stop cdmi webdav gridftp frontend backend redis-server trust
-docker-compose ${COMPOSE_OPTS} rm -f -s testsuite cdmi webdav gridftp frontend backend redis-server trust
+docker ${COMPOSE_OPTS} stop cdmi webdav gridftp frontend backend redis-server trust
+docker ${COMPOSE_OPTS} rm -f testsuite cdmi webdav gridftp frontend backend redis-server trust
 # Clear deployment and network
 docker-compose ${COMPOSE_OPTS} down
 
