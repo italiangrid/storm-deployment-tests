@@ -46,7 +46,7 @@ mkdir -p ${outputDir}/etc/sysconfig
 
 # Stop if compose is running
 { 
-    docker-compose ${COMPOSE_OPTS} down
+    docker-compose ${COMPOSE_OPTS} rm -f -s -v
 
 } || {
 
@@ -116,12 +116,14 @@ docker cp frontend:/etc/sysconfig/storm-frontend-server ${outputDir}/etc/sysconf
 ts_ec=$(docker inspect testsuite -f '{{.State.ExitCode}}')
 
 # Stop all containers and remove them
-stop_active_containers "test.example"
+#stop_active_containers "test.example"
 # Delete all containers
-delete_containers ${ALL_CONTAINERS}
+#delete_containers ${ALL_CONTAINERS}
 
 # Clear deployment and network
-docker-compose ${COMPOSE_OPTS} down
+#docker-compose ${COMPOSE_OPTS} down
+docker-compose ${COMPOSE_OPTS} rm -f -s -v
+
 
 set -e
 
