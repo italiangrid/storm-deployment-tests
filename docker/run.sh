@@ -4,7 +4,7 @@ set -ex
 stop_active_containers () {
 
     # get params
-    network_name = $1
+    network_name=$1
     # get active containers names
     echo "getting active containers ... "
     active_containers=`docker network inspect ${network_name} --format='{{range .Containers}}{{.Name}} {{end}}'`
@@ -16,7 +16,7 @@ stop_active_containers () {
 delete_containers () {
 
     # get params
-    containers = $1
+    containers=$1
     # delete containers
     echo "deleting ${containers} ..."
     docker rm -f ${containers}
@@ -25,7 +25,7 @@ delete_containers () {
 
 outputDir="./output"
 
-ALL_CONTAINERS="testsuite cdmi webdav gridftp frontend backend redis-server trust"
+ALL_CONTAINERS="testsuite cdmi webdav gridftp frontend backend redis trust"
 
 PLATFORM=${PLATFORM:-centos7}
 TARGET_RELEASE=${TARGET_RELEASE:-nightly}
@@ -77,6 +77,10 @@ docker-compose ${COMPOSE_OPTS} exec ${TTY_OPTS} backend sh -c "TARGET_RELEASE=${
 docker-compose ${COMPOSE_OPTS} exec ${TTY_OPTS} frontend sh -c "TARGET_RELEASE=${TARGET_RELEASE} sh /node/configure-service.sh"
 docker-compose ${COMPOSE_OPTS} exec ${TTY_OPTS} gridftp sh -c "TARGET_RELEASE=${TARGET_RELEASE} sh /node/configure-service.sh"
 docker-compose ${COMPOSE_OPTS} exec ${TTY_OPTS} webdav sh -c "TARGET_RELEASE=${TARGET_RELEASE} sh /node/configure-service.sh"
+
+docker-compose ${COMPOSE_OPTS} up --no-color -d cdmi
+docker-compose ${COMPOSE_OPTS} exec ${TTY_OPTS} cdmi sh -c "TARGET_RELEASE=${TARGET_RELEASE} sh /assets/configure-node.sh"
+docker-compose ${COMPOSE_OPTS} exec ${TTY_OPTS} cdmi sh -c "TARGET_RELEASE=${TARGET_RELEASE} sh /assets/configure-service.sh"
 
 set +e
 docker-compose ${COMPOSE_OPTS} up --no-color testsuite

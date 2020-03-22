@@ -7,7 +7,7 @@ PLUGINS_CONFIG_PATH="/etc/cdmi-server/plugins"
 
 if [ -z ${CDMI_CLIENT_ID+x} ]; then echo "CDMI_CLIENT_ID is unset"; exit 1; fi
 if [ -z ${CDMI_CLIENT_SECRET+x} ]; then echo "CDMI_CLIENT_SECRET is unset"; exit 1; fi
-REDIS_HOSTNAME="${REDIS_HOSTNAME:-redis.cnaf.infn.it}"
+REDIS_HOSTNAME="${REDIS_HOSTNAME:-redis.test.example}"
 
 # install cdmi_storm
 yum clean all

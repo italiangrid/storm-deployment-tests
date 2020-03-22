@@ -19,31 +19,40 @@ services:
     volumes:
       - trustanchors:/etc/grid-security/certificates
 
-  redis-server:
+  redis:
     container_name: redis
     dns_search: test.example
-    hostname: redis-server.test.example
+    hostname: redis.test.example
     image: redis:latest
+    ports:
+      - 6379:6379
     networks:
       test.example:
         aliases:
-          - redis-server.test.example
+          - redis.test.example
 
   cdmi:
-    image: italiangrid/cdmi-storm
     build:
-      context: ./cdmi-storm
+      context: ./systemd-node
     container_name: cdmi
     dns_search: test.example
     hostname: cdmi.test.example
     depends_on:
-      - redis-server
+      - redis
       - backend
+    ports:
+      - 8888:8888
     environment:
       - MODE=clean
-      - REDIS_HOSTNAME=redis-server.example
-      - PLATFORM=centos6
+      - REDIS_HOSTNAME=redis.test.example
+      - CDMI_CLIENT_ID=838129a5-84ca-4dc4-bfd8-421ee317aabd
       - CDMI_CLIENT_SECRET
+    cap_add:
+      - SYS_ADMIN
+    privileged: true
+    volumes:
+      - trustanchors:/etc/grid-security/certificates
+      - ./cdmi/assets:/assets
     networks:
       test.example:
         aliases:
