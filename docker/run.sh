@@ -19,7 +19,7 @@ delete_containers () {
     containers=$1
     # delete containers
     echo "deleting ${containers} ..."
-    docker rm -f ${containers}
+    docker rm -f ${containers} || true
     echo "deleted."
 }
 
@@ -51,13 +51,8 @@ mkdir -p ${outputDir}/etc/sysconfig
 } || {
 
     # Probably there are still active nodeS
-    { 
-        stop_active_containers "test.example"
-        delete_containers ${ALL_CONTAINERS}
-        docker-compose ${COMPOSE_OPTS} down
-    } || {
-        docker-compose ${COMPOSE_OPTS} down
-    }
+    stop_active_containers "test.example"
+    docker-compose ${COMPOSE_OPTS} down -v
 }
 # Pull images from dockerhub
 docker-compose ${COMPOSE_OPTS} pull
