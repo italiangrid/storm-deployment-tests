@@ -19,7 +19,6 @@ pipeline {
     UPGRADE_FROM = "${params.UPGRADE_FROM}"
     TARGET_RELEASE = "${params.TARGET_RELEASE}"
     TESTSUITE_BRANCH = "${params.TESTSUITE_BRANCH}"
-    COMPOSE_PROJECT_NAME = "storm-deployment-test-${BUILD_TAG}"
     TTY_OPTS = "-T"
   }
 
