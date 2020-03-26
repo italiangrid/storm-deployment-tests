@@ -3,7 +3,7 @@
 echo "TARGET_RELEASE=${TARGET_RELEASE}"
 
 # Install host certificate and key
-mkdir /etc/grid-security
+mkdir -p /etc/grid-security
 cp /assets/certificates/star.test.example.cert.pem /etc/grid-security/hostcert.pem
 cp /assets/certificates/star.test.example.key.pem /etc/grid-security/hostkey.pem
 chmod 644 /etc/grid-security/hostcert.pem

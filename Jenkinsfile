@@ -13,12 +13,14 @@ pipeline {
     choice(choices: '\nstable', name: 'UPGRADE_FROM', description: 'Upgrade from this repo.')
     choice(choices: 'nightly\nstable\nbeta', name: 'TARGET_RELEASE', description: 'Target release to test.')
     choice(choices: 'nightly\nv1.11.17\nv1.11.16\nv1.11.15', name: 'TESTSUITE_BRANCH', description: 'Testsuite branch.')
+    choice(choices: 'develop\nmaster', name: 'STORM_PUPPET_MODULE_BRANCH', description: 'StoRM puppet module branch.')
   }
 
   environment {
     UPGRADE_FROM = "${params.UPGRADE_FROM}"
     TARGET_RELEASE = "${params.TARGET_RELEASE}"
     TESTSUITE_BRANCH = "${params.TESTSUITE_BRANCH}"
+    STORM_PUPPET_MODULE_BRANCH = "${params.STORM_PUPPET_MODULE_BRANCH}"
     TTY_OPTS = "-T"
   }
 
@@ -33,6 +35,7 @@ pipeline {
             echo "UPGRADE_FROM=${env.UPGRADE_FROM}"
             echo "TARGET_RELEASE=${env.TARGET_RELEASE}"
             echo "TESTSUITE_BRANCH=${env.TESTSUITE_BRANCH}"
+            echo "STORM_PUPPET_MODULE_BRANCH=${env.STORM_PUPPET_MODULE_BRANCH}"
             echo "TTY_OPTS=${env.TTY_OPTS}"
             dir("docker") {
               sh "bash ./run.sh"

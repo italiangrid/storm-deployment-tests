@@ -2,8 +2,6 @@
 set -ex
 trap "exit 1" TERM
 
-VERSION=$1
-
 pushd .
 
 # add SAs links

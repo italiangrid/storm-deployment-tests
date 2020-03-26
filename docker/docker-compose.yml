@@ -43,10 +43,10 @@ services:
     ports:
       - 8888:8888
     environment:
-      - MODE=clean
       - REDIS_HOSTNAME=redis.test.example
-      - CDMI_CLIENT_ID=838129a5-84ca-4dc4-bfd8-421ee317aabd
+      - CDMI_CLIENT_ID
       - CDMI_CLIENT_SECRET
+      - TARGET_RELEASE
     cap_add:
       - SYS_ADMIN
     privileged: true
@@ -65,14 +65,15 @@ services:
     hostname: testsuite.test.example
     entrypoint: sh /assets/run_testsuite.sh
     environment:
-      - TESTSUITE_BRANCH
-      - TESTSUITE_EXCLUDE
-      - TESTSUITE_SUITE
-      - VOMS_FAKE
+      - TESTSUITE_BRANCH=nightly
+      - TESTSUITE_EXCLUDE=to-be-fixedORno-btrfs
+      - TESTSUITE_SUITE=tests
+      - CDMI_CLIENT_ID
       - CDMI_CLIENT_SECRET
+      - IAM_USER_NAME
       - IAM_USER_PASSWORD
-      - DAV_HOST
-      - SRM_HOST
+      - DAV_HOST=webdav.test.example
+      - SRM_HOST=frontend.test.example
     depends_on:
       - backend
       - cdmi
@@ -98,6 +99,7 @@ services:
       - STORM_DEPLOYMENT_IMAGE_TAG
       - UPGRADE_FROM
       - TARGET_RELEASE
+      - STORM_PUPPET_MODULE_BRANCH
     ports:
       - 8080:8080
       - 9998:9998
@@ -120,19 +122,24 @@ services:
   gridftp:
     build:
       context: ./systemd-node
+    image: italiangrid/systemd-node
     container_name: gridftp
     dns_search: test.example
     hostname: gridftp.test.example
     ports:
       - 2811:2811
+    environment:
+      - UPGRADE_FROM
+      - TARGET_RELEASE
+      - STORM_PUPPET_MODULE_BRANCH
+      - COMPONENT=gridftp
     depends_on:
       - trust
     volumes:
       - trustanchors:/etc/grid-security/certificates
-      - ./systemd-node/assets:/node
-      - ./gridftp/assets:/assets
       - storage:/storage
       - gridmapdir:/etc/grid-security/gridmapdir
+      - ./systemd-node/assets:/assets
     cap_add:
       - SYS_ADMIN
     networks:
@@ -143,17 +150,22 @@ services:
   frontend:
     build:
       context: ./systemd-node
+    image: italiangrid/systemd-node
     container_name: frontend
     dns_search: test.example
     hostname: frontend.test.example
     ports:
       - 8444:8444
+    environment:
+      - UPGRADE_FROM
+      - TARGET_RELEASE
+      - STORM_PUPPET_MODULE_BRANCH
+      - COMPONENT=frontend
     depends_on:
       - trust
     volumes:
       - trustanchors:/etc/grid-security/certificates
-      - ./systemd-node/assets:/node
-      - ./frontend/assets:/assets
+      - ./systemd-node/assets:/assets
       - gridmapdir:/etc/grid-security/gridmapdir
     cap_add:
       - SYS_ADMIN
@@ -165,18 +177,23 @@ services:
   webdav:
     build:
       context: ./systemd-node
+    image: italiangrid/systemd-node
     container_name: webdav
     dns_search: test.example
     hostname: webdav.test.example
     ports:
       - 8085:8085
       - 8443:8443
+    environment:
+      - UPGRADE_FROM
+      - TARGET_RELEASE
+      - STORM_PUPPET_MODULE_BRANCH
+      - COMPONENT=webdav
     depends_on:
       - trust
     volumes:
       - trustanchors:/etc/grid-security/certificates
-      - ./systemd-node/assets:/node
-      - ./webdav/assets:/assets
+      - ./systemd-node/assets:/assets
       - storage:/storage
       - gridmapdir:/etc/grid-security/gridmapdir
     cap_add:

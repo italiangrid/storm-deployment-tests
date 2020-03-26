@@ -4,7 +4,7 @@
 /opt/glite/yaim/bin/yaim -c -s /etc/storm/siteinfo/storm.def -n se_storm_backend
 
 # do fixture
-sh ./fixture.sh ${TARGET_RELEASE}
+sh /assets/scripts/fixture.sh
 
 # print JSON report
 /usr/libexec/storm-info-provider get-report-json
