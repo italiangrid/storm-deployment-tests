@@ -2,8 +2,13 @@
 set -ex
 trap "exit 1" TERM
 
+STORM_UID=${STORM_UID:-1100}
+STORM_GID=${STORM_GID:-1100}
+
 echo "UPGRADE_FROM = ${UPGRADE_FROM}"
 echo "TARGET_RELEASE = ${TARGET_RELEASE}"
+echo "STORM_UID = ${STORM_UID}"
+echo "STORM_GID = ${STORM_GID}"
 
 if [ -z ${TARGET_RELEASE+x} ]; then
     echo "TARGET_RELEASE is unset - 'nightly' will be used as target";
@@ -11,8 +16,8 @@ if [ -z ${TARGET_RELEASE+x} ]; then
 fi
 
 # add storm user
-groupadd -g 1100 storm
-useradd -u 1100 -g 1100 storm
+groupadd -g ${STORM_GID} storm
+useradd -u ${STORM_UID} -g ${STORM_GID} storm
 
 # install UMD repositories
 sh ./install-umd-repos.sh

@@ -100,6 +100,8 @@ services:
       - UPGRADE_FROM
       - TARGET_RELEASE
       - STORM_PUPPET_MODULE_BRANCH
+      - STORM_UID
+      - STORM_GID
     ports:
       - 8080:8080
       - 9998:9998

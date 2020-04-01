@@ -32,19 +32,34 @@ if [ -z ${IAM_USER_PASSWORD+x} ]; then
     echo "IAM_USER_PASSWORD is unset";
 fi
 
+cat > ./variables.yml <<EOL
+backEndHost: ${STORM_BE_HOST}
+cdmiEndpoint: ${CDMI_ENDPOINT}
+cdmiAdminUser: ${CDMI_ADMIN_USERNAME}
+cdmiAdminPassword: ${CDMI_ADMIN_PASSWORD}
+cdmiClientId: ${CDMI_CLIENT_ID}
+cdmiClientSecret: ${CDMI_CLIENT_SECRET}
+iamUserName: ${IAM_USER_NAME}
+iamUserPassword: ${IAM_USER_PASSWORD}
+storageAreaRoot: ${STORM_STORAGE_ROOT_DIR}
+DAVHost: ${DAV_HOST}
+globusEndpoint: ${GFTP_HOST}:${GFTP_PORT}
+frontEndHost: ${SRM_HOST}
+EOL
+
 # Build variables
-VARIABLES="--variable backEndHost:$STORM_BE_HOST"
-VARIABLES="$VARIABLES --variable cdmiEndpoint:$CDMI_ENDPOINT"
-VARIABLES="$VARIABLES --variable cdmiAdminUser:$CDMI_ADMIN_USERNAME"
-VARIABLES="$VARIABLES --variable cdmiAdminPassword:$CDMI_ADMIN_PASSWORD"
-VARIABLES="$VARIABLES --variable cdmiClientId:$CDMI_CLIENT_ID"
-VARIABLES="$VARIABLES --variable cdmiClientSecret:$CDMI_CLIENT_SECRET"
-VARIABLES="$VARIABLES --variable iamUserName:$IAM_USER_NAME"
-VARIABLES="$VARIABLES --variable iamUserPassword:$IAM_USER_PASSWORD"
-VARIABLES="$VARIABLES --variable storageAreaRoot:$STORM_STORAGE_ROOT_DIR"
-VARIABLES="$VARIABLES --variable DAVHost:$DAV_HOST"
-VARIABLES="$VARIABLES --variable globusEndpoint:$GFTP_HOST:$GFTP_PORT"
-VARIABLES="$VARIABLES --variable frontEndHost:$SRM_HOST"
+#VARIABLES="--variable backEndHost:$STORM_BE_HOST"
+#VARIABLES="$VARIABLES --variable cdmiEndpoint:$CDMI_ENDPOINT"
+#VARIABLES="$VARIABLES --variable cdmiAdminUser:$CDMI_ADMIN_USERNAME"
+#VARIABLES="$VARIABLES --variable cdmiAdminPassword:$CDMI_ADMIN_PASSWORD"
+#VARIABLES="$VARIABLES --variable cdmiClientId:$CDMI_CLIENT_ID"
+#VARIABLES="$VARIABLES --variable cdmiClientSecret:$CDMI_CLIENT_SECRET"
+#VARIABLES="$VARIABLES --variable iamUserName:$IAM_USER_NAME"
+#VARIABLES="$VARIABLES --variable iamUserPassword:$IAM_USER_PASSWORD"
+#VARIABLES="$VARIABLES --variable storageAreaRoot:$STORM_STORAGE_ROOT_DIR"
+#VARIABLES="$VARIABLES --variable DAVHost:$DAV_HOST"
+#VARIABLES="$VARIABLES --variable globusEndpoint:$GFTP_HOST:$GFTP_PORT"
+#VARIABLES="$VARIABLES --variable frontEndHost:$SRM_HOST"
 
 # Build exclude clause
 if [ -z "$TESTSUITE_EXCLUDE" ]; then
@@ -69,4 +84,5 @@ else
   cd storm-testsuite
 fi
 
-robot --pythonpath .:lib $VARIABLES $EXCLUDE -d reports -s $TESTSUITE_SUITE tests
+robot --pythonpath .:lib --variablefile $EXCLUDE -d reports -s $TESTSUITE_SUITE tests
+#robot --pythonpath .:lib $VARIABLES $EXCLUDE -d reports -s $TESTSUITE_SUITE tests

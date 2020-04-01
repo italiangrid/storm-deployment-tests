@@ -1,10 +1,7 @@
-class { 'storm::webdav':
-  user_name     => 'storm',
-  user_uid      => 1100,
-  user_gid      => 1100,
+class { 'storm::users': }
+-> class { 'storm::webdav':
   use_conscrypt => true,
   enable_http2  => true,
-  jvm_opts      => '-Xms256m -Xmx512m',
   storage_areas => [
     {
       'name'                       => 'test.vo',
