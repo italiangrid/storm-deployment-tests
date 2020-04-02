@@ -84,5 +84,5 @@ else
   cd storm-testsuite
 fi
 
-robot --pythonpath .:lib --variablefile $EXCLUDE -d reports -s $TESTSUITE_SUITE tests
+robot --pythonpath .:lib --variablefile variables.yml $EXCLUDE -d reports -s $TESTSUITE_SUITE tests
 #robot --pythonpath .:lib $VARIABLES $EXCLUDE -d reports -s $TESTSUITE_SUITE tests
