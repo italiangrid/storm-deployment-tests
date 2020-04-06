@@ -1,4 +1,4 @@
-class { 'storm::users': }
+class {'storm::users': }
 -> class { 'storm::webdav':
   use_conscrypt => true,
   enable_http2  => true,

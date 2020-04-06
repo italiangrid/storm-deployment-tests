@@ -68,15 +68,6 @@ docker-compose ${COMPOSE_OPTS} down -v
     set +e
     docker-compose ${COMPOSE_OPTS} up --no-color testsuite
 
-    # Save docker-compose logs
-    docker-compose ${COMPOSE_OPTS} logs --no-color trust >${OUTPUT_DIR}/compose-logs/trust.log
-    docker-compose ${COMPOSE_OPTS} logs --no-color cdmi >${OUTPUT_DIR}/compose-logs/cdmi.log
-    docker-compose ${COMPOSE_OPTS} logs --no-color backend >${OUTPUT_DIR}/compose-logs/backend.log
-    docker-compose ${COMPOSE_OPTS} logs --no-color webdav >${OUTPUT_DIR}/compose-logs/webdav.log
-    docker-compose ${COMPOSE_OPTS} logs --no-color frontend >${OUTPUT_DIR}/compose-logs/frontend.log
-    docker-compose ${COMPOSE_OPTS} logs --no-color gridftp >${OUTPUT_DIR}/compose-logs/gridftp.log
-    docker-compose ${COMPOSE_OPTS} logs --no-color testsuite >${OUTPUT_DIR}/compose-logs/testsuite.log
-
     # Save testsuite reports dir
     docker cp testsuite:/home/tester/storm-testsuite/reports ${OUTPUT_DIR}
 

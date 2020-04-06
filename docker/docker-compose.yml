@@ -198,6 +198,7 @@ services:
       - ./systemd-node/assets:/assets
       - storage:/storage
       - gridmapdir:/etc/grid-security/gridmapdir
+#      - /Users/vianello/git/storm-pm:/storm-puppet-module
     cap_add:
       - SYS_ADMIN
     networks:
