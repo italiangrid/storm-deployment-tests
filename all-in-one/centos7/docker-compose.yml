@@ -1,0 +1,74 @@
+version: '3.5'
+
+volumes:
+  trustanchors:
+  storage:
+  gridmapdir:
+
+networks:
+  test.example:
+    name: test.example
+
+services:
+
+  trust:
+    container_name: trust
+    image: indigoiam/trustanchors
+    environment:
+      - FORCE_TRUST_ANCHORS_UPDATE=1
+    volumes:
+      - trustanchors:/etc/grid-security/certificates
+
+  testsuite:
+    image: italiangrid/storm-testsuite:${TESTSUITE_BRANCH}
+    container_name: testsuite
+    dns_search: test.example
+    hostname: testsuite.test.example
+    entrypoint: sleep infinity
+    #entrypoint: sh /assets/run_testsuite.sh
+    environment:
+      - TESTSUITE_BRANCH=nightly
+      - TESTSUITE_EXCLUDE=to-be-fixedORno-btrfsORcdmi
+      - TESTSUITE_SUITE=tests
+    depends_on:
+      - storm
+      - trust
+    volumes:
+      - trustanchors:/etc/grid-security/certificates
+      - ./testsuite/assets:/assets
+    networks:
+      test.example:
+        aliases:
+          - testsuite.test.example
+
+  storm:
+    build:
+      context: ./tf-node
+    image: italiangrid/tf-node
+    container_name: storm
+    dns_search: test.example
+    hostname: storm.test.example
+    environment:
+      - UPGRADE_FROM
+      - TARGET_RELEASE
+      - STORM_PUPPET_MODULE_BRANCH
+    ports:
+      - 8080:8080
+      - 9998:9998
+      - 2170:2170
+    depends_on:
+      - trust
+    volumes:
+      - trustanchors:/etc/grid-security/certificates
+      - ./tf-node/assets:/assets/node
+      - ./storm/assets:/assets/service
+      - storage:/storage
+      - gridmapdir:/etc/grid-security/gridmapdir
+      - /Users/vianello/git/storm-pm:/storm-puppet-module
+    cap_add:
+      - SYS_ADMIN
+    privileged: true
+    networks:
+      test.example:
+        aliases:
+          - storm.test.example
