@@ -22,7 +22,6 @@ class { 'storm::storage':
 
 exec { 'apply-fixtures':
   command     => '/bin/bash /assets/service/fixture.sh',
-  refreshonly => true,
 }
 
 class { 'bdii':
