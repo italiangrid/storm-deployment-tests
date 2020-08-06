@@ -24,8 +24,8 @@ services:
     container_name: testsuite
     dns_search: test.example
     hostname: testsuite.test.example
-    entrypoint: sleep infinity
-    #entrypoint: sh /assets/run_testsuite.sh
+    # entrypoint: sleep infinity
+    entrypoint: sh /assets/run_testsuite.sh
     environment:
       - TESTSUITE_BRANCH=nightly
       - TESTSUITE_EXCLUDE=to-be-fixedORno-btrfsORcdmi
@@ -64,7 +64,7 @@ services:
       - ./storm/assets:/assets/service
       - storage:/storage
       - gridmapdir:/etc/grid-security/gridmapdir
-      - /Users/vianello/git/storm-pm:/storm-puppet-module
+#      - /Users/vianello/git/storm-pm:/storm-puppet-module
     cap_add:
       - SYS_ADMIN
     privileged: true
