@@ -6,11 +6,6 @@ OUTPUT_DIR=${OUTPUT_DIR:-"./output"}
 COMPOSE_OPTS=${COMPOSE_OPTS:-"--no-ansi"}
 TTY_OPTS="${TTY_OPTS:-}"
 
-TARGET_RELEASE=${TARGET_RELEASE:-"beta"}
-STORM_PUPPET_MODULE_BRANCH=${STORM_PUPPET_MODULE_BRANCH:-"develop"}
-
-COMPOSE_ENV_VARS="-e TARGET_RELEASE=${TARGET_RELEASE} -e STORM_PUPPET_MODULE_BRANCH=${STORM_PUPPET_MODULE_BRANCH}"
-
 # Clear output directory
 rm -rf ${OUTPUT_DIR}
 
@@ -31,7 +26,7 @@ docker-compose ${COMPOSE_OPTS} down -v
 
     # StoRM
     docker-compose ${COMPOSE_OPTS} up --no-color -d storm
-    docker-compose ${COMPOSE_OPTS} ${COMPOSE_ENV_VARS} exec ${TTY_OPTS} storm sh -c "sh /assets/node/configure-node.sh"
+    docker-compose ${COMPOSE_OPTS} exec ${TTY_OPTS} storm sh -c "sh /assets/node/configure-node.sh"
     docker-compose ${COMPOSE_OPTS} exec ${TTY_OPTS} storm sh -c "sh /assets/node/configure-service.sh"
 
     set +e
