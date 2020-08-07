@@ -1,0 +1,160 @@
+version: '3.5'
+
+volumes:
+  trustanchors:
+  storage:
+  gridmapdir:
+
+networks:
+  test.example:
+    name: test.example
+
+services:
+
+  trust:
+    container_name: trust
+    image: indigoiam/trustanchors
+    environment:
+      - FORCE_TRUST_ANCHORS_UPDATE=1
+    volumes:
+      - trustanchors:/etc/grid-security/certificates
+
+  testsuite:
+    image: italiangrid/storm-testsuite:nightly
+    container_name: testsuite
+    dns_search: test.example
+    hostname: testsuite.test.example
+    entrypoint: sh /assets/run_testsuite.sh
+    environment:
+      - TESTSUITE_EXCLUDE=to-be-fixedORno-btrfs
+      - TESTSUITE_SUITE=tests
+      - DAV_HOST=webdav.test.example
+      - SRM_HOST=frontend.test.example
+    depends_on:
+      - backend
+      - trust
+      - webdav
+      - frontend
+      - gridftp
+    volumes:
+      - trustanchors:/etc/grid-security/certificates
+      - ./testsuite/assets:/assets
+    networks:
+      test.example:
+        aliases:
+          - testsuite.test.example
+
+  gridftp:
+    build:
+      context: ./tf-node
+    image: italiangrid/tf-node
+    container_name: gridftp
+    dns_search: test.example
+    hostname: gridftp.test.example
+    ports:
+      - 2811:2811
+    environment:
+      - UPGRADE_FROM
+      - TARGET_RELEASE
+      - STORM_PUPPET_MODULE_BRANCH
+    depends_on:
+      - trust
+    volumes:
+      - trustanchors:/etc/grid-security/certificates
+      - ./tf-node/assets:/assets/node
+      - ./gridftp/assets:/assets/service
+      - storage:/storage
+      - gridmapdir:/etc/grid-security/gridmapdir
+    cap_add:
+      - SYS_ADMIN
+    networks:
+      test.example:
+        aliases:
+          - gridftp.test.example
+
+  frontend:
+    build:
+      context: ./systemd-node
+    image: italiangrid/systemd-node
+    container_name: frontend
+    dns_search: test.example
+    hostname: frontend.test.example
+    ports:
+      - 8444:8444
+    environment:
+      - UPGRADE_FROM
+      - TARGET_RELEASE
+      - STORM_PUPPET_MODULE_BRANCH
+    depends_on:
+      - trust
+    volumes:
+      - trustanchors:/etc/grid-security/certificates
+      - ./systemd-node/assets:/assets/node
+      - ./frontend/assets:/assets/service
+      - gridmapdir:/etc/grid-security/gridmapdir
+    cap_add:
+      - SYS_ADMIN
+    networks:
+      test.example:
+        aliases:
+          - frontend.test.example
+
+  webdav:
+    build:
+      context: ./tf-node
+    image: italiangrid/tf-node
+    container_name: webdav
+    dns_search: test.example
+    hostname: webdav.test.example
+    ports:
+      - 8085:8085
+      - 8443:8443
+    environment:
+      - UPGRADE_FROM
+      - TARGET_RELEASE
+      - STORM_PUPPET_MODULE_BRANCH
+    depends_on:
+      - trust
+    volumes:
+      - trustanchors:/etc/grid-security/certificates
+      - ./tf-node/assets:/assets/node
+      - ./webdav/assets:/assets/service
+      - storage:/storage
+      - gridmapdir:/etc/grid-security/gridmapdir
+    cap_add:
+      - SYS_ADMIN
+    networks:
+      test.example:
+        aliases:
+          - webdav.test.example
+
+  backend:
+    build:
+      context: ./tf-node
+    image: italiangrid/tf-node
+    container_name: backend
+    dns_search: test.example
+    hostname: backend.test.example
+    environment:
+      - UPGRADE_FROM
+      - TARGET_RELEASE
+      - STORM_PUPPET_MODULE_BRANCH
+    ports:
+      - 8080:8080
+      - 9998:9998
+      - 2170:2170
+    depends_on:
+      - trust
+    volumes:
+      - trustanchors:/etc/grid-security/certificates
+      - ./tf-node/assets:/assets/node
+      - ./backend/assets:/assets/service
+      - storage:/storage
+      - gridmapdir:/etc/grid-security/gridmapdir
+    cap_add:
+      - SYS_ADMIN
+    privileged: true
+    networks:
+      test.example:
+        aliases:
+          - backend.test.example
