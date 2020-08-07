@@ -22,17 +22,4 @@ RUN yum install -y epel-release
 # Install UMD repositories:
 RUN yum localinstall -y http://repository.egi.eu/sw/production/umd/4/centos7/x86_64/updates/umd-release-4.1.3-1.el7.centos.noarch.rpm
 
-# Install StoRM prerequisites:
-RUN yum install -y attr
-
-# Install YAIM core
-RUN yum install -y glite-yaim-core
-
-# Install YAIM's se_storm_tfnode profile's needed rpms
-RUN yum install -y edg-mkgridmap lcas lcmaps lcas-lcmaps-gt4-interface
-
-ADD ./setup /setup
-RUN chmod +x /setup/configure-node.sh
-RUN sh /setup/configure-node.sh
-
 ENTRYPOINT /usr/sbin/init

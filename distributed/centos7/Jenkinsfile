@@ -1,0 +1,52 @@
+pipeline {
+
+  agent {
+    label 'deployment-test'
+  }
+
+  options {
+    timeout(time: 1, unit: 'HOURS')
+    buildDiscarder(logRotator(numToKeepStr: '5'))
+  }
+
+  environment {
+    TTY_OPTS = "-T"
+  }
+
+  stages {
+    stage('Run') {
+      steps {
+        script {
+          echo "TTY_OPTS=${env.TTY_OPTS}"
+          dir("distributed/centos7") {
+            sh "bash ./run.sh"
+          }
+        }
+      }
+    }
+  }
+  post {
+    always {
+      archiveArtifacts 'docker/output/**'
+      step([$class: 'RobotPublisher',
+        disableArchiveOutput: false,
+        logFileName: 'log.html',
+        otherFiles: '*.png',
+        outputFileName: 'output.xml',
+        outputPath: "docker/output/reports",
+        passThreshold: 100,
+        reportFileName: 'report.html',
+        unstableThreshold: 90])
+    }
+    failure {
+      slackSend channel: '#ci-deployment-tests', color: 'danger', message: "${env.JOB_NAME} - #${env.BUILD_ID} Failure (<${env.BUILD_URL}|Open>)"
+    }
+    changed {
+      script {
+        if ('SUCCESS'.equals(currentBuild.result)) {
+          slackSend channel: '#ci-deployment-tests', color: 'good', message: "${env.JOB_NAME} - #${env.BUILD_ID} Back to normal (<${env.BUILD_URL}|Open>)"
+        }
+      }
+    }
+  }
+}
