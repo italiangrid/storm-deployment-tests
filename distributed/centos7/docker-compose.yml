@@ -26,7 +26,7 @@ services:
     hostname: testsuite.test.example
     entrypoint: sh /assets/run_testsuite.sh
     environment:
-      - TESTSUITE_EXCLUDE=to-be-fixedORno-btrfs
+      - TESTSUITE_EXCLUDE=to-be-fixedORno-btrfsORcdmi
       - TESTSUITE_SUITE=tests
       - DAV_HOST=webdav.test.example
       - SRM_HOST=frontend.test.example
