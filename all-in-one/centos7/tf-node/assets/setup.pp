@@ -1,15 +1,25 @@
-include mwdevel_test_vos2
-include mwdevel_test_ca
-
 include ntp
+include epel
+include umd4
 include fetchcrl
+include testvos
+include testca
 
 include storm::users
-include storm::gridmap
+include storm::mapping
 
-class { 'storm::storage':
+package { 'attr':
+  ensure => latest,
+}
+
+file { '/storage':
+  ensure  => directory,
+  mode    => '0755',
+  owner   => 'root',
+  group   => 'root',
+  recurse => false,
+} -> class { 'storm::storage':
   root_directories => [
-    '/storage',
     '/storage/test.vo',
     '/storage/test.vo.2',
     '/storage/igi',
@@ -17,6 +27,7 @@ class { 'storm::storage':
     '/storage/test.vo.bis',
     '/storage/nested',
     '/storage/tape',
+    '/storage/info',
   ],
 }
 
@@ -25,11 +36,13 @@ exec { 'apply-fixtures':
 }
 
 class { 'bdii':
-  firewall => false,
+  firewall   => false,
+  bdiipasswd => 'supersecretpassword',
 }
 
 Class['storm::users']
--> Class['storm::storage']
--> Class['storm::gridmap']
+-> Class['storm::mapping']
+
+Class['storm::storage']
 -> Exec['apply-fixtures']
 

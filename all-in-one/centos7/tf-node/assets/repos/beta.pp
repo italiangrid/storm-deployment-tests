@@ -1,3 +1,3 @@
 class { 'storm::repo':
-  enabled => ['stable', 'beta'],
+  enabled     => ['stable', 'beta'],
 }

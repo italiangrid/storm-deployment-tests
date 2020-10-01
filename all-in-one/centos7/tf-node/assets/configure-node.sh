@@ -10,33 +10,14 @@ cp /assets/node/certificates/star.test.example.key.pem /etc/grid-security/hostke
 chmod 644 /etc/grid-security/hostcert.pem
 chmod 400 /etc/grid-security/hostkey.pem
 
-# Install StoRM prerequisites:
-yum install -y attr
-
 # Install needed modules
 puppet module install puppetlabs-ntp
 puppet module install puppet-fetchcrl
-puppet module install lcgdm-voms
+puppet module install puppet-epel
 puppet module install cnafsd-bdii
-
-# Install mwdevel puppet modules
-git clone git://github.com/cnaf/ci-puppet-modules.git /ci-puppet-modules
-cd /ci-puppet-modules/modules
-
-cd mwdevel_umd_repo
-puppet module build
-puppet module install ./pkg/mwdevel-mwdevel_umd_repo-0.1.0.tar.gz
-cd ..
-
-cd mwdevel_test_vos2
-puppet module build
-puppet module install ./pkg/mwdevel-mwdevel_test_vos2-0.1.0.tar.gz
-cd ..
-
-cd mwdevel_test_ca
-puppet module build
-puppet module install ./pkg/mwdevel-mwdevel_test_ca-0.1.0.tar.gz
-cd ..
+puppet module install cnafsd-umd4
+puppet module install cnafsd-testvos
+puppet module install cnafsd-testca
 
 # Install storm puppet module
 if [ -d "/storm-puppet-module" ] 
@@ -51,7 +32,7 @@ else
     cd /storm-puppet-module
 fi
 puppet module build
-puppet module install ./pkg/cnafsd-storm-*.tar.gz
+puppet module install ./pkg/cnafsd-storm-*.tar.gz --verbose
 
 # Add the right enabled repository
 puppet apply /assets/node/repos/${TARGET_RELEASE}.pp
