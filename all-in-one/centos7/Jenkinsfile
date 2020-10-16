@@ -33,7 +33,7 @@ pipeline {
         logFileName: 'log.html',
         otherFiles: '*.png',
         outputFileName: 'output.xml',
-        outputPath: "docker/output/reports",
+        outputPath: "all-in-one/centos7/output/reports",
         passThreshold: 100,
         reportFileName: 'report.html',
         unstableThreshold: 90])
