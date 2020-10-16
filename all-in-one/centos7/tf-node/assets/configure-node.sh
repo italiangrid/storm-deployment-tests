@@ -1,6 +1,5 @@
 #!/bin/bash
 
-echo "STORM_PUPPET_MODULE_BRANCH=${STORM_PUPPET_MODULE_BRANCH}"
 echo "TARGET_RELEASE=${TARGET_RELEASE}"
 
 # Copy host certificate and key
@@ -18,6 +17,8 @@ puppet module install cnafsd-bdii
 puppet module install cnafsd-umd4
 puppet module install cnafsd-testvos
 puppet module install cnafsd-testca
+puppet module install cnafsd-lcmaps
+puppet module install cnafsd-sd_users
 
 # Install storm puppet module
 if [ -d "/storm-puppet-module" ] 
@@ -28,7 +29,7 @@ then
     puppet module uninstall cnafsd-storm
 else
     echo "Directory /storm-puppet-module does not exists."
-    git clone https://github.com/italiangrid/storm-puppet-module.git -b ${STORM_PUPPET_MODULE_BRANCH} /storm-puppet-module
+    git clone https://github.com/italiangrid/storm-puppet-module.git /storm-puppet-module
     cd /storm-puppet-module
 fi
 puppet module build

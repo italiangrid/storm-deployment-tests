@@ -1,15 +1,16 @@
 $host='storm.test.example'
+$xmlrpc_token='NS4kYAZuR65XJCq'
 
 include storm::db
 
 class { 'storm::backend':
   hostname              => $host,
   transfer_protocols    => ['file', 'gsiftp', 'webdav', 'xroot'],
-  xmlrpc_security_token => 'NS4kYAZuR65XJCq',
-  db_username           => 'storm',
-  db_password           => 'storm',
+  xmlrpc_security_token => $xmlrpc_token,
   service_du_enabled    => true,
   lcmaps_debug_level    => 5,
+  manage_path_authz_db  => true,
+  path_authz_db_file    => '/assets/service/path-authz.db',
   srm_pool_members      => [
     {
       'hostname' => $host,
@@ -81,11 +82,14 @@ class { 'storm::backend':
   ],
 }
 
+storm::backend::storage_site_report { 'storage-site-report':
+  report_path => '/storage/info/report.json',
+  minute      => '*/20',
+}
+
 class { 'storm::frontend':
   be_xmlrpc_host  => $host,
-  be_xmlrpc_token => 'NS4kYAZuR65XJCq',
-  db_user         => 'storm',
-  db_passwd       => 'storm',
+  be_xmlrpc_token => $xmlrpc_token,
 }
 
 class { 'storm::gridftp':
@@ -96,26 +100,33 @@ class { 'storm::gridftp':
 }
 
 class { 'storm::webdav':
-  storage_areas_directory => '/assets/service/sa.d',
   hostnames               => [$host]
 }
 
-file { '/root/update-site-report.sh':
-  ensure => 'present',
-  source => 'puppet:///modules/storm/update-site-report.sh',
+# WebDAV configuration
+storm::webdav::application_file { 'application.yml':
+  source => '/assets/service/application.yml',
 }
-
-cron { 'update-site-report':
-  ensure  => 'present',
-  command => '/bin/bash /root/update-report.sh',
-  user    => 'root',
-  minute  => '*/30',
-  require => File['/root/update-site-report.sh'],
+storm::webdav::storage_area_file { 'test.vo.properties':
+  source => '/assets/service/sa.d/test.vo.properties',
 }
-
-exec { 'create-site-report':
-  command => '/bin/bash /root/update-site-report.sh',
-  require => File['/root/update-site-report.sh'],
+storm::webdav::storage_area_file { 'test.vo.2.properties':
+  source => '/assets/service/sa.d/test.vo.2.properties',
+}
+storm::webdav::storage_area_file { 'test.vo.bis.properties':
+  source => '/assets/service/sa.d/test.vo.bis.properties',
+}
+storm::webdav::storage_area_file { 'tape.properties':
+  source => '/assets/service/sa.d/tape.properties',
+}
+storm::webdav::storage_area_file { 'info.properties':
+  source => '/assets/service/sa.d/info.properties',
+}
+storm::webdav::storage_area_file { 'noauth.properties':
+  source => '/assets/service/sa.d/noauth.properties',
+}
+storm::webdav::storage_area_file { 'igi.properties':
+  source => '/assets/service/sa.d/igi.properties',
 }
 
 Class['storm::db']
@@ -123,4 +134,3 @@ Class['storm::db']
 -> Class['storm::frontend']
 -> Class['storm::gridftp']
 -> Class['storm::webdav']
--> File['/root/update-site-report.sh']

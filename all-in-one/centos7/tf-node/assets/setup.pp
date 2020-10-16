@@ -4,9 +4,10 @@ include umd4
 include fetchcrl
 include testvos
 include testca
+include sd_users
 
 include storm::users
-include storm::mapping
+include lcmaps
 
 package { 'attr':
   ensure => latest,
@@ -41,8 +42,7 @@ class { 'bdii':
 }
 
 Class['storm::users']
--> Class['storm::mapping']
+-> Class['lcmaps']
 
 Class['storm::storage']
 -> Exec['apply-fixtures']
-
