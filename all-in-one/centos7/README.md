@@ -1,0 +1,44 @@
+# StoRM all-in-one CentOS 7 deployment test
+
+## Usage
+
+Edit as your needed `.env` file:
+
+```bash
+COMPOSE_PROJECT_NAME=storm-deployment-tests-all-in-one
+
+# STORM_TARGET_RELEASE means which StoRM repositories have to be installed/enabled.
+# Values: nightly, beta and stable. Cannot be empty.
+# nightly means both stable and nigthly repo are installed
+# beta means both stable and beta repo are installed
+# stable means only stable is installed
+STORM_TARGET_RELEASE=stable
+
+# VOMS_TARGET_RELEASE means which VOMS repositories have to be installed/enabled.
+# Values: nightly, beta and stable. Cannot be empty.
+# nightly means both stable and nigthly repo are installed
+# beta means both stable and beta repo are installed
+# stable means only stable is installed
+VOMS_TARGET_RELEASE=stable
+
+# PKG_STORM_BRANCH means that the last successful stage area created on that pkg.storm branch
+# is installed as a YUM repository. If set to 'none' is not used.
+PKG_STORM_BRANCH=none
+
+# PKG_VOMS_BRANCH means that the last successful stage area created on that pkg.voms branch
+# is installed as a YUM repository. If set to 'none' is not used.
+PKG_VOMS_BRANCH=none
+
+# Testsuite configuration:
+TESTSUITE_BRANCH=nightly
+TESTSUITE_SUITE=tests
+TESTSUITE_EXCLUDE=to-be-fixedORno-btrfsORcdmi
+```
+
+## Launch
+
+Run deployment using `run.sh`:
+
+```
+$ sh run.sh
+```
