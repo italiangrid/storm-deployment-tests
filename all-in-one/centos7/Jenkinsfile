@@ -9,8 +9,19 @@ pipeline {
     buildDiscarder(logRotator(numToKeepStr: '5'))
   }
 
+  parameters {
+    string(defaultValue: "stable", description: 'Which StoRM repositories have to be installed/enabled. Values: nightly beta and stable', name: 'STORM_TARGET_RELEASE')
+    string(defaultValue: "stable", description: 'Which VOMS repositories have to be installed/enabled. Values: nightly beta and stable', name: 'VOMS_TARGET_RELEASE')
+    string(defaultValue: "none", description: '', name: 'PKG_STORM_BRANCH')
+    string(defaultValue: "none", description: '', name: 'PKG_VOMS_BRANCH')
+  }
+
   environment {
     TTY_OPTS = "-T"
+    STORM_TARGET_RELEASE = "${params.STORM_TARGET_RELEASE}"
+    VOMS_TARGET_RELEASE = "${params.VOMS_TARGET_RELEASE}"
+    PKG_STORM_BRANCH = "${params.PKG_STORM_BRANCH}"
+    PKG_VOMS_BRANCH = "${params.PKG_VOMS_BRANCH}"
   }
 
   stages {
@@ -27,7 +38,7 @@ pipeline {
   }
   post {
     always {
-      archiveArtifacts 'docker/output/**'
+      archiveArtifacts 'all-in-one/centos7/output/**'
       step([$class: 'RobotPublisher',
         disableArchiveOutput: false,
         logFileName: 'log.html',

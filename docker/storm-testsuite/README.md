@@ -1,3 +1,0 @@
-STORM testsuite image
-=====================
-

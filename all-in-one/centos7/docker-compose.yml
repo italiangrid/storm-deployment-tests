@@ -35,23 +35,22 @@ services:
       - trust
     volumes:
       - trustanchors:/etc/grid-security/certificates
-      - ./testsuite/assets:/assets
+      - ./assets/testsuite:/assets
     networks:
       test.example:
         aliases:
           - testsuite.test.example
 
   storm:
-    build:
-      context: ./tf-node
     image: italiangrid/tf-node
     container_name: storm
     dns_search: test.example
     hostname: storm.test.example
     environment:
-      - UPGRADE_FROM
-      - TARGET_RELEASE
-      - STORM_PUPPET_MODULE_BRANCH
+      - STORM_TARGET_RELEASE
+      - VOMS_TARGET_RELEASE
+      - PKG_STORM_BRANCH
+      - PKG_VOMS_BRANCH
     ports:
       - 8080:8080
       - 9998:9998
@@ -60,11 +59,12 @@ services:
       - trust
     volumes:
       - trustanchors:/etc/grid-security/certificates
-      - ./tf-node/assets:/assets/node
-      - ./storm/assets:/assets/service
+      - ./assets/node:/assets/node
+      - ./assets/services:/assets/services
       - storage:/storage
       - gridmapdir:/etc/grid-security/gridmapdir
-#      - /Users/vianello/git/storm-pm:/storm-puppet-module
+#      - /Users/vianello/eclipse-workspace-2020-06/storm-puppet-module:/storm-puppet-module
+#      - /Users/vianello/eclipse-workspace-2020-06/puppet-lcmaps:/puppet-lcmaps
     cap_add:
       - SYS_ADMIN
     privileged: true

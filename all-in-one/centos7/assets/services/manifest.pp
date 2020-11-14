@@ -10,7 +10,7 @@ class { 'storm::backend':
   service_du_enabled    => true,
   lcmaps_debug_level    => 5,
   manage_path_authz_db  => true,
-  path_authz_db_file    => '/assets/service/path-authz.db',
+  path_authz_db_file    => '/assets/services/path-authz.db',
   srm_pool_members      => [
     {
       'hostname' => $host,
@@ -105,28 +105,32 @@ class { 'storm::webdav':
 
 # WebDAV configuration
 storm::webdav::application_file { 'application.yml':
-  source => '/assets/service/application.yml',
+  source => '/assets/services/application.yml',
 }
 storm::webdav::storage_area_file { 'test.vo.properties':
-  source => '/assets/service/sa.d/test.vo.properties',
+  source => '/assets/services/sa.d/test.vo.properties',
 }
 storm::webdav::storage_area_file { 'test.vo.2.properties':
-  source => '/assets/service/sa.d/test.vo.2.properties',
+  source => '/assets/services/sa.d/test.vo.2.properties',
 }
 storm::webdav::storage_area_file { 'test.vo.bis.properties':
-  source => '/assets/service/sa.d/test.vo.bis.properties',
+  source => '/assets/services/sa.d/test.vo.bis.properties',
 }
 storm::webdav::storage_area_file { 'tape.properties':
-  source => '/assets/service/sa.d/tape.properties',
+  source => '/assets/services/sa.d/tape.properties',
 }
 storm::webdav::storage_area_file { 'info.properties':
-  source => '/assets/service/sa.d/info.properties',
+  source => '/assets/services/sa.d/info.properties',
 }
 storm::webdav::storage_area_file { 'noauth.properties':
-  source => '/assets/service/sa.d/noauth.properties',
+  source => '/assets/services/sa.d/noauth.properties',
 }
 storm::webdav::storage_area_file { 'igi.properties':
-  source => '/assets/service/sa.d/igi.properties',
+  source => '/assets/services/sa.d/igi.properties',
+}
+
+exec { 'restart-bdii':
+  command => '/bin/systemctl restart bdii',
 }
 
 Class['storm::db']
@@ -134,3 +138,4 @@ Class['storm::db']
 -> Class['storm::frontend']
 -> Class['storm::gridftp']
 -> Class['storm::webdav']
+-> Exec['restart-bdii']
