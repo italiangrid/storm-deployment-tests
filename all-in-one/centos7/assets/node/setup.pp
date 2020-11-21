@@ -25,8 +25,9 @@ $storage_area_root_directories = [
 ]
 
 storm::rootdir { '/storage': }
--> storm::sarootdir { $storage_area_root_directories: }
--> exec { 'apply-fixtures':
+storm::sarootdir { $storage_area_root_directories: }
+
+exec { 'apply-fixtures':
   command => '/bin/bash /assets/node/fixture.sh',
 }
 
@@ -37,3 +38,6 @@ class { 'bdii':
 
 Class['storm::users']
 -> Class['lcmaps']
+
+Storm::Sarootdir[$storage_area_root_directories]
+-> Exec['apply-fixtures']
