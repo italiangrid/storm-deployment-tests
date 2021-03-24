@@ -66,7 +66,7 @@ services:
       - ./assets/services:/assets/services
       - storage:/storage
       - gridmapdir:/etc/grid-security/gridmapdir
-      - /Users/vianello/eclipse-workspace-2020-06/storm-puppet-module:/storm-puppet-module
+#      - /Users/vianello/eclipse-workspace-2020-06/storm-puppet-module:/storm-puppet-module
 #      - /Users/vianello/eclipse-workspace-2020-06/puppet-lcmaps:/puppet-lcmaps
     cap_add:
       - SYS_ADMIN
