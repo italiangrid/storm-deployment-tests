@@ -18,23 +18,26 @@ pipeline {
       }
     }
 
-    stage('build and push tf-node image') {
+    stage('build and push systemd-node image') {
       steps {
         script {
-          dir("docker/tf-node") {
-            sh "sh build-image.sh"
-            sh "sh push-image.sh"
+          withDockerRegistry([ credentialsId: "dockerhub-enrico", url: "" ]) {
+            dir("docker/systemd-node") {
+              sh "sh build-image.sh"
+              sh "sh push-image.sh"
+            }
           }
         }
       }
     }
-
-    stage('build and push systemd-node image') {
+    stage('build and push cdmi-server image') {
       steps {
         script {
-          dir("docker/systemd-node") {
-            sh "sh build-image.sh"
-            sh "sh push-image.sh"
+          withDockerRegistry([ credentialsId: "dockerhub-enrico", url: "" ]) {
+            dir("docker/cdmi-server") {
+              sh "sh build-image.sh"
+              sh "sh push-image.sh"
+            }
           }
         }
       }
