@@ -15,6 +15,7 @@ pipeline {
     string(defaultValue: "stable", description: 'Which StoRM repositories have to be installed/enabled. Values: nightly beta and stable', name: 'STORM_TARGET_RELEASE')
     string(defaultValue: "stable", description: 'Which VOMS repositories have to be installed/enabled. Values: nightly beta and stable', name: 'VOMS_TARGET_RELEASE')
     string(defaultValue: "none", description: '', name: 'PKG_STORM_BRANCH')
+    string(defaultValue: "centos7java11", description: '', name: 'PKG_STORM_PLATFORM')
     string(defaultValue: "none", description: '', name: 'PKG_VOMS_BRANCH')
   }
 
@@ -23,6 +24,7 @@ pipeline {
     STORM_TARGET_RELEASE = "${params.STORM_TARGET_RELEASE}"
     VOMS_TARGET_RELEASE = "${params.VOMS_TARGET_RELEASE}"
     PKG_STORM_BRANCH = "${params.PKG_STORM_BRANCH}"
+    PKG_STORM_PLATFORM = "${params.PKG_STORM_PLATFORM}"
     PKG_VOMS_BRANCH = "${params.PKG_VOMS_BRANCH}"
   }
 
