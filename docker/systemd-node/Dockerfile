@@ -1,25 +1,29 @@
-FROM centos/systemd
+FROM centos:7
 
-RUN \
-  rpm --import http://mirror.centos.org/centos/7/os/x86_64/RPM-GPG-KEY-CentOS-7 && \
-  rpm --import http://mirror.centos.org/centos/7/os/x86_64/RPM-GPG-KEY-CentOS-Testing-7 && \
-  yum clean all && \
+# cURL bug: https://bugs.centos.org/view.php?id=16282
+RUN touch /etc/sysconfig/64bit_strstr_via_64bit_strstr_sse2_unaligned
+
+RUN echo "include_only=.garr.it,.cern.ch" >> /etc/yum/pluginconf.d/fastestmirror.conf && \
+  yum -y install hostname which wget git tar nc deltarpm redhat-lsb sudo file less epel-release && \
   yum -y update && \
-  yum --enablerepo=centosplus install -y redhat-lsb
-
-ENV PATH="/opt/puppetlabs/bin:${PATH}"
-
-# Install utils
-RUN yum install -y wget git tar nc deltarpm
+  yum clean all && \
+  rm -rf /var/cache/yum && \
+  (cd /lib/systemd/system/sysinit.target.wants/; for i in *; do \
+  [ $i == systemd-tmpfiles-setup.service ] || rm -f $i; done); \
+  rm -f /lib/systemd/system/multi-user.target.wants/*; \
+  rm -f /etc/systemd/system/*.wants/*; \
+  rm -f /lib/systemd/system/local-fs.target.wants/*; \
+  rm -f /lib/systemd/system/sockets.target.wants/*udev*; \
+  rm -f /lib/systemd/system/sockets.target.wants/*initctl*; \
+  rm -f /lib/systemd/system/basic.target.wants/*; \
+  rm -f /lib/systemd/system/anaconda.target.wants/*;
 
 # Install Puppet
 RUN rpm -Uvh https://yum.puppetlabs.com/puppet5/el/7/x86_64/puppet5-release-5.0.0-6.el7.noarch.rpm && \
   yum install -y puppet
 
-# Install EPEL repositories:
-RUN yum install -y epel-release
+ENV PATH="/opt/puppetlabs/bin:${PATH}"
+ENV container=docker
 
-# Install UMD repositories:
-RUN yum localinstall -y http://repository.egi.eu/sw/production/umd/4/centos7/x86_64/updates/umd-release-4.1.3-1.el7.centos.noarch.rpm
-
-ENTRYPOINT /usr/sbin/init
+VOLUME [ "/sys/fs/cgroup" ]
+CMD ["/usr/sbin/init"]

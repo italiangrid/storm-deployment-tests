@@ -32,31 +32,8 @@ puppet module install cnafsd-voms
 puppet module install cnafsd-testca
 puppet module install cnafsd-sdds_users
 
-# Install storm puppet module
-if [ -d "/storm-puppet-module" ] 
-then
-    echo "Directory /storm-puppet-module exists." 
-    cd /storm-puppet-module
-    rm -rf ./pkg
-    puppet module uninstall cnafsd-storm
-    puppet module build
-    puppet module install ./pkg/cnafsd-storm-*.tar.gz --verbose
-else
-    puppet module install cnafsd-storm
-fi
-
-# Install storm lcmaps module
-if [ -d "/puppet-lcmaps" ] 
-then
-    echo "Directory /puppet-lcmaps exists." 
-    cd /puppet-lcmaps
-    rm -rf ./pkg
-    puppet module uninstall cnafsd-lcmaps
-    puppet module build
-    puppet module install ./pkg/cnafsd-lcmaps-*.tar.gz --verbose
-else
-    puppet module install cnafsd-lcmaps
-fi
+puppet module install cnafsd-storm
+puppet module install cnafsd-lcmaps
 
 # Add the right enabled repositories
 puppet apply /assets/node/repos/storm/${STORM_TARGET_RELEASE}.pp

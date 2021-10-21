@@ -3,7 +3,7 @@ set -ex
 
 PLATFORM=${PLATFORM:-"centos7"}
 OUTPUT_DIR=${OUTPUT_DIR:-"./output"}
-COMPOSE_OPTS=${COMPOSE_OPTS:-"--no-ansi"}
+COMPOSE_OPTS=${COMPOSE_OPTS:-"--ansi never"}
 TTY_OPTS="${TTY_OPTS:-}"
 
 STORM_TARGET_RELEASE=${STORM_TARGET_RELEASE:-"stable"}
@@ -11,6 +11,8 @@ VOMS_TARGET_RELEASE=${VOMS_TARGET_RELEASE:-"stable"}
 PKG_STORM_BRANCH=${PKG_STORM_BRANCH:-"none"}
 PKG_STORM_PLATFORM=${PKG_STORM_PLATFORM:-"centos7java11"}
 PKG_VOMS_BRANCH=${PKG_VOMS_BRANCH:-"none"}
+PUPPET_MODULE_BRANCH=${PUPPET_MODULE_BRANCH:-"v4"}
+UPDATE_FROM_STABLE=${UPDATE_FROM_STABLE:-"yes"}
 
 # Clear output directory
 rm -rf ${OUTPUT_DIR}
@@ -27,15 +29,21 @@ docker-compose ${COMPOSE_OPTS} pull
 # Clear deployment and network
 docker-compose ${COMPOSE_OPTS} down -v
 
-ENV_VARS="-e STORM_TARGET_RELEASE=${STORM_TARGET_RELEASE} -e VOMS_TARGET_RELEASE=${VOMS_TARGET_RELEASE} -e PKG_STORM_BRANCH=${PKG_STORM_BRANCH} -e PKG_STORM_PLATFORM=${PKG_STORM_PLATFORM} -e PKG_VOMS_BRANCH=${PKG_VOMS_BRANCH}"
+ENV_VARS="-e STORM_TARGET_RELEASE=${STORM_TARGET_RELEASE} -e VOMS_TARGET_RELEASE=${VOMS_TARGET_RELEASE} -e PKG_STORM_BRANCH=${PKG_STORM_BRANCH} -e PKG_STORM_PLATFORM=${PKG_STORM_PLATFORM} -e PKG_VOMS_BRANCH=${PKG_VOMS_BRANCH} -e PUPPET_MODULE_BRANCH=${PUPPET_MODULE_BRANCH}"
 
 {
-
     # Deployment test
 
     # StoRM
     docker-compose ${COMPOSE_OPTS} up --no-color -d storm
     docker-compose ${COMPOSE_OPTS} exec ${TTY_OPTS} ${ENV_VARS} storm sh -c "sh /assets/node/configure-node.sh"
+    if [ ${UPDATE_FROM_STABLE} = "yes" ]; then
+      echo "Install stable release ... "
+      docker-compose ${COMPOSE_OPTS} exec ${TTY_OPTS} storm sh -c "sh /assets/services/install-stable.sh"
+    else
+      echo "It's a clean deployment ... "
+    fi
+    docker-compose ${COMPOSE_OPTS} exec ${TTY_OPTS} ${ENV_VARS} storm sh -c "sh /assets/node/update.sh"
     docker-compose ${COMPOSE_OPTS} exec ${TTY_OPTS} storm sh -c "sh /assets/services/configure-service.sh"
 
     set +e

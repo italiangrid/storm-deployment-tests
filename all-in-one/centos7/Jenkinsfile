@@ -17,6 +17,8 @@ pipeline {
     string(defaultValue: "none", description: '', name: 'PKG_STORM_BRANCH')
     string(defaultValue: "centos7java11", description: '', name: 'PKG_STORM_PLATFORM')
     string(defaultValue: "none", description: '', name: 'PKG_VOMS_BRANCH')
+    string(defaultValue: "master", description: 'storm-puppet-module remote branch', name: 'PUPPET_MODULE_BRANCH')
+    string(defaultValue: "no", description: 'Write yes to first install stable and then update with STORM_TARGET_RELEASE. No means a clean deployment', name: 'UPDATE_FROM_STABLE')
   }
 
   environment {
@@ -26,6 +28,8 @@ pipeline {
     PKG_STORM_BRANCH = "${params.PKG_STORM_BRANCH}"
     PKG_STORM_PLATFORM = "${params.PKG_STORM_PLATFORM}"
     PKG_VOMS_BRANCH = "${params.PKG_VOMS_BRANCH}"
+    PUPPET_MODULE_BRANCH = "${params.PUPPET_MODULE_BRANCH}"
+    UPDATE_FROM_STABLE = "${params.UPDATE_FROM_STABLE}"
   }
 
   stages {
