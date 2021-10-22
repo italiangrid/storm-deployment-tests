@@ -20,6 +20,8 @@ RUN echo "include_only=.garr.it,.cern.ch" >> /etc/yum/pluginconf.d/fastestmirror
 
 # Install Puppet
 RUN rpm -Uvh https://yum.puppetlabs.com/puppet5/el/7/x86_64/puppet5-release-5.0.0-6.el7.noarch.rpm && \
+  wget https://yum.puppetlabs.com/RPM-GPG-KEY-puppet-20250406 && \
+  rpm --import RPM-GPG-KEY-puppet-20250406 && \
   yum install -y puppet
 
 ENV PATH="/opt/puppetlabs/bin:${PATH}"

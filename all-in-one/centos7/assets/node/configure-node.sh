@@ -35,9 +35,9 @@ puppet module install cnafsd-sdds_users
 puppet module install cnafsd-storm
 puppet module install cnafsd-lcmaps
 
-# Add the right enabled repositories
-puppet apply /assets/node/repos/storm/${STORM_TARGET_RELEASE}.pp
-puppet apply /assets/node/repos/voms/${VOMS_TARGET_RELEASE}.pp
+# Add only stable repo enabled
+puppet apply /assets/node/repos/storm/stable.pp
+puppet apply /assets/node/repos/voms/stable.pp
 
 if [ "$PKG_STORM_BRANCH" != "none" ]; then
     read -r -d '' PKG_STORM_PP_TEMPLATE << EOM

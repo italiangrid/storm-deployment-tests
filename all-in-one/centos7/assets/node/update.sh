@@ -1,3 +1,8 @@
+#!/bin/bash
+
+# Add the right enabled repositories
+puppet apply /assets/node/repos/storm/${STORM_TARGET_RELEASE}.pp
+puppet apply /assets/node/repos/voms/${VOMS_TARGET_RELEASE}.pp
 
 puppet module uninstall cnafsd-storm
 # Install storm puppet module
@@ -24,3 +29,5 @@ puppet module install ./pkg/cnafsd-storm-*.tar.gz --verbose
 #else
 #    puppet module install cnafsd-lcmaps
 #fi
+
+yum update -y
