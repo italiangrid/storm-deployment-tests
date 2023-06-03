@@ -19,10 +19,11 @@ RUN echo "include_only=.garr.it,.cern.ch" >> /etc/yum/pluginconf.d/fastestmirror
   rm -f /lib/systemd/system/anaconda.target.wants/*;
 
 # Install Puppet
-RUN rpm -Uvh https://yum.puppetlabs.com/puppet5/el/7/x86_64/puppet5-release-5.0.0-6.el7.noarch.rpm && \
-  wget https://yum.puppetlabs.com/RPM-GPG-KEY-puppet-20250406 && \
+RUN rpm -Uvh https://yum.puppet.com/puppet7-release-el-7.noarch.rpm && \
+  rpm -Uvh https://yum.puppet.com/puppet-tools-release-el-7.noarch.rpm && \
+  wget http://yum.puppet.com/RPM-GPG-KEY-puppet-20250406 && \
   rpm --import RPM-GPG-KEY-puppet-20250406 && \
-  yum install -y puppet
+  yum install -y puppet pdk
 
 ENV PATH="/opt/puppetlabs/bin:${PATH}"
 ENV container=docker
