@@ -1,6 +1,3 @@
-# ntp
-include ntp
-
 # repositories
 include epel
 include umd4

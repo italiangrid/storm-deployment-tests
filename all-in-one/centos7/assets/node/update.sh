@@ -48,7 +48,7 @@ else
     git clone --branch ${PUPPET_MODULE_BRANCH} https://github.com/italiangrid/storm-puppet-module.git /storm-puppet-module
 fi
 cd /storm-puppet-module
-puppet module build
+pdk build --force
 puppet module install ./pkg/cnafsd-storm-*.tar.gz --verbose
 
 # Install storm lcmaps module
