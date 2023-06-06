@@ -6,7 +6,7 @@ volumes:
   gridmapdir:
 
 networks:
-  test.example:
+  default:
     name: test.example
 
 services:
@@ -22,7 +22,6 @@ services:
   testsuite:
     image: italiangrid/storm-testsuite
     container_name: testsuite
-    dns_search: test.example
     hostname: testsuite.test.example
     # entrypoint: sleep infinity
     entrypoint: sh /assets/run_testsuite.sh
@@ -38,14 +37,13 @@ services:
       - trustanchors:/etc/grid-security/certificates
       - ./assets/testsuite:/assets
     networks:
-      test.example:
+      default:
         aliases:
           - testsuite.test.example
 
   storm:
     image: italiangrid/storm-node
     container_name: storm
-    dns_search: test.example
     hostname: storm.test.example
     environment:
       - STORM_TARGET_RELEASE
@@ -75,6 +73,6 @@ services:
       - SYS_ADMIN
     privileged: true
     networks:
-      test.example:
+      default:
         aliases:
           - storm.test.example

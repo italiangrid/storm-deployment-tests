@@ -8,7 +8,7 @@ on:
   push:
 
 jobs:
-  docker-build:
+  docker-build-systemd-node:
     runs-on: ubuntu-latest
     
     steps:

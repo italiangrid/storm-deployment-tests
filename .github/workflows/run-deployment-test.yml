@@ -1,0 +1,46 @@
+# This is a basic workflow to help you get started with Actions
+
+name: run deployment test
+
+on:
+  workflow_dispatch:
+    inputs:
+      pkg-storm-branch:
+        description: 'pkg.storm branch name to test'
+        required: true
+        default: 'v1.11.22'
+      puppet-module-branch:
+        description: 'storm-puppet-module branch name to test'
+        required: true
+        default: 'puppet7'
+  schedule:
+    - cron: 30 4 * * *
+  push:  
+
+env:
+  PKG_STORM_BRANCH: ${{ github.event.inputs.pkg-storm-branch || 'v1.11.22' }}
+  PUPPET_MODULE_BRANCH: ${{ github.event.inputs.puppet-module-branch || 'puppet7' }}
+  TTY_OPTS: "-T"
+
+jobs:
+  run-deployment-test:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Run deployment test
+        run: |
+          echo "$PKG_STORM_BRANCH - $PUPPET_MODULE_BRANCH"
+          cd ./all-in-one/centos7
+          chmod +x run.sh
+          sh run.sh
+        shell: bash
+
+      - name: Archive artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: robot-reports
+          path: |
+            ./all-in-one/centos7/output

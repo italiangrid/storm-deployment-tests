@@ -34,7 +34,7 @@ $storage_area_root_directories = [
   '/storage/test.vo.bis',
   '/storage/nested',
   '/storage/tape',
-  '/storage/info'
+  '/storage/info',
 ]
 storm::rootdir { '/storage': }
 storm::sarootdir { $storage_area_root_directories: }
