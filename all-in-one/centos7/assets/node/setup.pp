@@ -46,8 +46,7 @@ exec { 'apply-fixtures':
 
 # Install BDII
 class { 'bdii':
-  firewall   => false,
-  bdiipasswd => 'supersecretpassword',
+  manage_firewall => false,
 }
 
 # Ordering

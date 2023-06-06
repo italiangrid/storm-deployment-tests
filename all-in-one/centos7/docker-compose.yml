@@ -20,7 +20,7 @@ services:
       - trustanchors:/etc/grid-security/certificates
 
   testsuite:
-    image: italiangrid/storm-testsuite:${TESTSUITE_BRANCH}
+    image: italiangrid/storm-testsuite
     container_name: testsuite
     dns_search: test.example
     hostname: testsuite.test.example
@@ -30,6 +30,7 @@ services:
       - TESTSUITE_BRANCH=nightly
       - TESTSUITE_EXCLUDE=to-be-fixedORno-btrfsORcdmi
       - TESTSUITE_SUITE=tests
+      - TESTSUITE=https://github.com/italiangrid/storm-testsuite.git
     depends_on:
       - storm
       - trust

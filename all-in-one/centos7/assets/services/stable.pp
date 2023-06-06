@@ -4,17 +4,15 @@ $xmlrpc_token='NS4kYAZuR65XJCq'
 include storm::db
 
 class { 'storm::backend':
-  hostname              => $host,
   transfer_protocols    => ['gsiftp', 'webdav', 'xroot'],
   xmlrpc_security_token => $xmlrpc_token,
   service_du_enabled    => true,
   lcmaps_debug_level    => 5,
-  manage_path_authz_db  => true,
   path_authz_db_file    => '/assets/services/path-authz.db',
   srm_pool_members      => [
     {
       'hostname' => $host,
-    }
+    },
   ],
   gsiftp_pool_members   => [
     {
@@ -100,7 +98,7 @@ class { 'storm::gridftp':
 }
 
 class { 'storm::webdav':
-  hostnames               => [$host]
+  hostnames => [$host],
 }
 
 # WebDAV configuration

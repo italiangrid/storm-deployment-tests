@@ -1,0 +1,32 @@
+# This is a basic workflow to help you get started with Actions
+
+name: build systemd-node docker image
+
+on:
+  schedule:
+    - cron: 30 2 * * *
+  push:
+
+jobs:
+  docker-build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v1 
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+      - name: Build Docker image
+        uses: docker/build-push-action@v2
+        with:
+          tags: italiangrid/systemd-node:latest
+          context: ./docker/systemd-node
+          file: ./docker/systemd-node/Dockerfile
+          push: false
+
+      - name: Push docker image
+        run: docker push italiangrid/systemd-node:latest

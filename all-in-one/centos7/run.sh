@@ -1,8 +1,6 @@
 #!/bin/bash
 set -ex
 
-. .env
-
 PLATFORM=${PLATFORM:-"centos7"}
 OUTPUT_DIR=${OUTPUT_DIR:-"./output"}
 COMPOSE_OPTS=${COMPOSE_OPTS:-"--ansi never"}
