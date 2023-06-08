@@ -13,10 +13,10 @@ pipeline {
   parameters {
     string(name: 'STORM_TARGET_RELEASE', defaultValue: "stable", description: 'Which StoRM repositories have to be installed/enabled. Values: nightly beta and stable')
     string(name: 'VOMS_TARGET_RELEASE', defaultValue: "stable", description: 'Which VOMS repositories have to be installed/enabled. Values: nightly beta and stable')
-    string(name: 'PKG_STORM_BRANCH', defaultValue: "none", description: '')
+    string(name: 'PKG_STORM_BRANCH', defaultValue: "v1.11.22", description: '')
     string(name: 'PKG_STORM_PLATFORM', defaultValue: "centos7java11", description: '')
     string(name: 'PKG_VOMS_BRANCH', defaultValue: "none", description: '')
-    string(name: 'PUPPET_MODULE_BRANCH', defaultValue: "master", description: 'storm-puppet-module remote branch')
+    string(name: 'PUPPET_MODULE_BRANCH', defaultValue: "puppet7", description: 'storm-puppet-module remote branch')
     string(name: 'UPDATE_FROM_STABLE', defaultValue: "no", description: 'Write yes to first install stable and then update with STORM_TARGET_RELEASE. No means a clean deployment')
   }
 

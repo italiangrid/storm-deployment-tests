@@ -12,11 +12,11 @@ echo "PKG_STORM_BRANCH=${PKG_STORM_BRANCH}"
 echo "PKG_VOMS_BRANCH=${PKG_VOMS_BRANCH}"
 
 # Copy host certificate and key
-#mkdir -p /etc/grid-security
-#cp /assets/node/certificates/star.test.example.cert.pem /etc/grid-security/hostcert.pem
-#cp /assets/node/certificates/star.test.example.key.pem /etc/grid-security/hostkey.pem
-#chmod 644 /etc/grid-security/hostcert.pem
-#chmod 400 /etc/grid-security/hostkey.pem
+mkdir -p /etc/grid-security
+cp /assets/node/certificates/star.test.example.cert.pem /etc/grid-security/hostcert.pem
+cp /assets/node/certificates/star.test.example.key.pem /etc/grid-security/hostkey.pem
+chmod 644 /etc/grid-security/hostcert.pem
+chmod 400 /etc/grid-security/hostkey.pem
 
 # Add only stable repo enabled
 puppet apply /assets/node/repos/storm/stable.pp

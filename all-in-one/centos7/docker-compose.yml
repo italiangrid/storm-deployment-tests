@@ -63,8 +63,6 @@ services:
       - trustanchors:/etc/grid-security/certificates
       - ./assets/node:/assets/node
       - ./assets/services:/assets/services
-      - ./assets/node/certificates/star.test.example.cert.pem:/etc/grid-security/hostcert.pem
-      - ./assets/node/certificates/star.test.example.key.pem:/etc/grid-security/hostkey.pem
       - storage:/storage
       - gridmapdir:/etc/grid-security/gridmapdir
 #      - /Users/vianello/eclipse-workspace-2020-06/storm-puppet-module:/storm-puppet-module
